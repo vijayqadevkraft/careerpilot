@@ -1,0 +1,10 @@
+{
+  "name": "careerpilot-autofill",
+  "version": "1.0.0",
+  "description": "Playwright-based smart form auto-filler for job applications",
+  "main": "autofill.js",
+  "type": "module",
+  "dependencies": {
+    "playwright-core": "^1.49.1"
+  }
+}

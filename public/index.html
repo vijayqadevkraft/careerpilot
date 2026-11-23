@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareerPilot AI — Vijay Kumar's Job Hunting Portal</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <!-- Brand Logo -->
+      <div class="brand">
+        <div class="brand-icon-wrap">🚀</div>
+        <div class="brand-text">
+          <h2>CareerPilot</h2>
+          <span>AI Job Command</span>
+        </div>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="nav-links">
+        <button class="nav-btn active" data-tab="dashboard">
+          <span class="icon">🏠</span> Dashboard
+        </button>
+        <button class="nav-btn" data-tab="search">
+          <span class="icon">🔍</span> Job Search
+        </button>
+        <button class="nav-btn" data-tab="applications">
+          <span class="icon">📑</span> Applications
+        </button>
+        <button class="nav-btn" data-tab="compare" id="nav-btn-compare" style="white-space:nowrap;">
+          <span class="icon">⚖️</span> Compare (<span id="compare-badge">0</span>)
+        </button>
+        <button class="nav-btn" data-tab="ai-agent" id="nav-btn-ai-agent" style="background: linear-gradient(90deg, rgba(236, 72, 153, 0.15), rgba(139, 92, 246, 0.15)); border: 1px solid rgba(236, 72, 153, 0.35);">
+          <span class="icon">🤖</span> AI Career Agent <span style="font-size:9.5px; background:linear-gradient(135deg, #ec4899, #8b5cf6); color:#fff; font-weight:800; padding:1px 6px; border-radius:10px; margin-left:auto;">COPILOT</span>
+        </button>
+        <button class="nav-btn" data-tab="ai-toolkit" id="nav-btn-ai-toolkit" style="background: linear-gradient(90deg, rgba(56, 189, 248, 0.15), rgba(139, 92, 246, 0.15)); border: 1px solid rgba(56, 189, 248, 0.35);">
+          <span class="icon">✨</span> AI Career Toolkit <span style="font-size:9.5px; background:var(--primary); color:#0b0f19; font-weight:800; padding:1px 6px; border-radius:10px; margin-left:auto;">AI</span>
+        </button>
+        <button class="nav-btn" data-tab="interviews">
+          <span class="icon">📅</span> Interviews
+        </button>
+        <button class="nav-btn" data-tab="analytics">
+          <span class="icon">📊</span> Analytics
+        </button>
+        <button class="nav-btn" data-tab="resume">
+          <span class="icon">📄</span> Resume Builder
+        </button>
+        <button class="nav-btn" data-tab="cover-letter" id="nav-btn-cover-letter">
+          <span class="icon">✉️</span> Cover Letter
+        </button>
+        <button class="nav-btn" data-tab="company">
+          <span class="icon">🏢</span> Company Research
+        </button>
+        <button class="nav-btn" data-tab="settings">
+          <span class="icon">⚙️</span> Settings
+        </button>
+        <button class="nav-btn" data-tab="profile">
+          <span class="icon">👤</span> Profile
+        </button>
+        <a href="/mini" target="_blank" class="nav-btn" style="text-decoration:none; color:inherit;" title="Open Mini Companion Dashboard in a compact view">
+          <span class="icon">📱</span> Mini Dashboard ↗
+        </a>
+      </nav>
+
+      <!-- Sidebar Automation Active Card -->
+      <div class="sidebar-automation-card">
+        <div class="auto-status-header">
+          <span class="auto-dot" id="sidebar-auto-dot"></span>
+          <span id="sidebar-auto-text">Automation Active</span>
+        </div>
+        <div class="auto-timer-sub" id="sidebar-auto-timer">Next scan in 5h 32m</div>
+        <svg class="auto-sparkline" viewBox="0 0 100 24" fill="none" preserveAspectRatio="none">
+          <path d="M0 16 Q 15 22, 30 14 T 60 12 T 80 4 T 100 10" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+
+      <!-- User Profile Card -->
+      <div class="profile-footer-card">
+        <div class="profile-avatar-pill">VK</div>
+        <div class="profile-info-pill">
+          <h4>Vijay Kumar</h4>
+          <p>Senior QA • Automation • Manual</p>
+        </div>
+        <span class="pro-badge">Pro</span>
+      </div>
+      <div class="version-tag">v1.0.0</div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Topbar Header -->
+      <header class="topbar">
+        <div class="topbar-search">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="global-search" placeholder="Search jobs, companies, or skills...">
+        </div>
+        <div class="topbar-actions">
+          <a href="/api/pdf?file=cv/Vijay_Kumar_Senior_QA_CV.pdf&download=1" class="btn btn-outline" download style="text-decoration:none; border-radius:999px; padding:8px 14px; font-size:12.5px; font-weight:700; display:inline-flex; align-items:center; gap:5px;" title="Download Master CV PDF">
+            <span>📄</span> Master CV
+          </a>
+          <a href="/api/pdf?file=cover_letters/Vijay_Kumar_Cover_Letter.pdf&download=1" class="btn btn-outline" download style="text-decoration:none; border-radius:999px; padding:8px 14px; font-size:12.5px; font-weight:700; display:inline-flex; align-items:center; gap:5px; background: rgba(139, 92, 246, 0.08); border-color: rgba(139, 92, 246, 0.3); color: #7c3aed;" title="Download Master Cover Letter PDF">
+            <span>✉️</span> Master Cover Letter
+          </a>
+          <a href="/mini" target="_blank" class="btn btn-outline" style="text-decoration:none; border-radius:999px; padding:8px 14px; font-size:12.5px; font-weight:700; display:inline-flex; align-items:center; gap:5px; border-color: rgba(56, 189, 248, 0.4); color: var(--primary);" title="Open Mini Companion Web App">
+            <span>📱</span> Mini App ↗
+          </a>
+          <button class="btn-notif" title="Notifications">
+            🔔
+            <span class="notif-badge">3</span>
+          </button>
+          <button class="btn-new-search" id="btn-topbar-new-search">
+            <span>+</span> New Job Search
+          </button>
+        </div>
+      </header>
+
+      <!-- TAB 1: MAIN DASHBOARD -->
+      <div id="tab-dashboard" class="tab-pane active dashboard-canvas">
+        <!-- Hero Banner -->
+        <section class="hero-banner">
+          <div class="hero-content">
+            <div class="hero-icon-target">🎯</div>
+            <div class="hero-titles">
+              <h1>Your AI Job Hunting Assistant</h1>
+              <p>Find. Match. Apply. Get Hired.</p>
+            </div>
+          </div>
+          <div class="hero-right-wrap">
+            <div class="hero-status-pill">
+              <span class="check-circle">✓</span>
+              <div>
+                <div class="status-text">Working Perfectly</div>
+                <div class="status-sub" id="hero-last-updated">Last updated: Today, 07:15 PM</div>
+              </div>
+            </div>
+            <div class="hero-illustration">🚀💻</div>
+          </div>
+        </section>
+
+        <!-- KPI Metric Cards Row -->
+        <section class="kpi-row">
+          <!-- 1. Total Jobs Found -->
+          <div class="kpi-card-box">
+            <div class="kpi-top">
+              <div class="kpi-icon-square blue">💼</div>
+              <div>
+                <span class="kpi-title-label">Total Jobs Found</span>
+                <div class="kpi-value-row">
+                  <h3 id="kpi-total-found">0</h3>
+                  <span class="kpi-pct-pill">Today</span>
+                </div>
+              </div>
+            </div>
+            <svg class="kpi-sparkline-svg" viewBox="0 0 100 32" preserveAspectRatio="none">
+              <path d="M0 26 Q 25 18, 50 24 T 75 14 T 100 18" stroke="#3b82f6" stroke-width="2.5" fill="none"/>
+            </svg>
+          </div>
+
+          <!-- 2. Shortlisted -->
+          <div class="kpi-card-box">
+            <div class="kpi-top">
+              <div class="kpi-icon-square purple">⭐</div>
+              <div>
+                <span class="kpi-title-label">Shortlisted</span>
+                <div class="kpi-value-row">
+                  <h3 id="kpi-shortlisted">0</h3>
+                  <span class="kpi-pct-pill">90%+ Fit</span>
+                </div>
+              </div>
+            </div>
+            <svg class="kpi-sparkline-svg" viewBox="0 0 100 32" preserveAspectRatio="none">
+              <path d="M0 28 Q 20 22, 45 26 T 70 12 T 100 16" stroke="#8b5cf6" stroke-width="2.5" fill="none"/>
+            </svg>
+          </div>
+
+          <!-- 3. Applied -->
+          <div class="kpi-card-box">
+            <div class="kpi-top">
+              <div class="kpi-icon-square green">✅</div>
+              <div>
+                <span class="kpi-title-label">Applied</span>
+                <div class="kpi-value-row">
+                  <h3 id="kpi-applied">0</h3>
+                  <span class="kpi-pct-pill">Active</span>
+                </div>
+              </div>
+            </div>
+            <svg class="kpi-sparkline-svg" viewBox="0 0 100 32" preserveAspectRatio="none">
+              <path d="M0 24 Q 25 28, 50 18 T 75 12 T 100 10" stroke="#10b981" stroke-width="2.5" fill="none"/>
+            </svg>
+          </div>
+
+          <!-- 4. Interviews -->
+          <div class="kpi-card-box">
+            <div class="kpi-top">
+              <div class="kpi-icon-square orange">📅</div>
+              <div>
+                <span class="kpi-title-label">Interviews</span>
+                <div class="kpi-value-row">
+                  <h3 id="kpi-interviews">0</h3>
+                  <span class="kpi-pct-pill">Scheduled</span>
+                </div>
+              </div>
+            </div>
+            <svg class="kpi-sparkline-svg" viewBox="0 0 100 32" preserveAspectRatio="none">
+              <path d="M0 28 Q 30 18, 55 24 T 80 14 T 100 8" stroke="#f59e0b" stroke-width="2.5" fill="none"/>
+            </svg>
+          </div>
+
+          <!-- 5. Offers -->
+          <div class="kpi-card-box">
+            <div class="kpi-top">
+              <div class="kpi-icon-square teal">🏆</div>
+              <div>
+                <span class="kpi-title-label">Offers</span>
+                <div class="kpi-value-row">
+                  <h3 id="kpi-offers">0</h3>
+                  <span class="kpi-pct-pill">Goal</span>
+                </div>
+              </div>
+            </div>
+            <svg class="kpi-sparkline-svg" viewBox="0 0 100 32" preserveAspectRatio="none">
+              <path d="M0 26 Q 25 24, 50 16 T 75 10 T 100 6" stroke="#06b6d4" stroke-width="2.5" fill="none"/>
+            </svg>
+          </div>
+        </section>
+
+        <!-- Middle Grid (Analytics | Match | Interviews) -->
+        <section class="middle-grid">
+          <!-- Card 1: Job Search Analytics -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3><span>📊</span> Job Search Analytics</h3>
+              <div class="time-filter-pills">
+                <button class="time-pill active">7D</button>
+                <button class="time-pill">30D</button>
+                <button class="time-pill">90D</button>
+                <button class="time-pill">1Y</button>
+              </div>
+            </div>
+
+            <div class="chart-legend" id="chart-legend-box">
+              <span><span class="legend-dot blue"></span> Jobs Found</span>
+              <span><span class="legend-dot purple"></span> Applications</span>
+              <span><span class="legend-dot green"></span> Interviews</span>
+            </div>
+
+            <svg class="analytics-chart-svg" viewBox="0 0 440 140">
+              <!-- Grid lines -->
+              <line x1="30" y1="20" x2="430" y2="20" stroke="#f1f5f9" stroke-width="1" stroke-dasharray="3 3"/>
+              <line x1="30" y1="50" x2="430" y2="50" stroke="#f1f5f9" stroke-width="1" stroke-dasharray="3 3"/>
+              <line x1="30" y1="80" x2="430" y2="80" stroke="#f1f5f9" stroke-width="1" stroke-dasharray="3 3"/>
+              <line x1="30" y1="110" x2="430" y2="110" stroke="#f1f5f9" stroke-width="1"/>
+
+              <!-- Y Labels -->
+              <text x="10" y="24" font-size="9" fill="#94a3b8">100</text>
+              <text x="10" y="54" font-size="9" fill="#94a3b8">75</text>
+              <text x="10" y="84" font-size="9" fill="#94a3b8">50</text>
+              <text x="10" y="114" font-size="9" fill="#94a3b8">25</text>
+
+              <!-- Blue Curve (Jobs Found) -->
+              <path d="M 40 95 C 100 65, 140 68, 200 65 C 260 62, 300 75, 360 68 C 390 62, 410 40, 420 38" fill="none" stroke="#3b82f6" stroke-width="2.5"/>
+              <circle cx="40" cy="95" r="3.5" fill="#3b82f6"/>
+              <circle cx="120" cy="68" r="3.5" fill="#3b82f6"/>
+              <circle cx="200" cy="65" r="3.5" fill="#3b82f6"/>
+              <circle cx="280" cy="64" r="3.5" fill="#3b82f6"/>
+              <circle cx="360" cy="68" r="3.5" fill="#3b82f6"/>
+              <circle cx="420" cy="38" r="4" fill="#3b82f6"/>
+
+              <!-- Purple Curve (Applications) -->
+              <path d="M 40 108 C 100 85, 140 82, 200 80 C 260 76, 300 84, 360 76 C 390 70, 410 55, 420 50" fill="none" stroke="#a855f7" stroke-width="2.5"/>
+              <circle cx="40" cy="108" r="3.5" fill="#a855f7"/>
+              <circle cx="120" cy="85" r="3.5" fill="#a855f7"/>
+              <circle cx="200" cy="80" r="3.5" fill="#a855f7"/>
+              <circle cx="280" cy="78" r="3.5" fill="#a855f7"/>
+              <circle cx="360" cy="76" r="3.5" fill="#a855f7"/>
+              <circle cx="420" cy="50" r="4" fill="#a855f7"/>
+
+              <!-- Green Curve (Interviews) -->
+              <path d="M 40 120 C 100 110, 140 105, 200 102 C 260 98, 300 102, 360 98 C 390 92, 410 78, 420 74" fill="none" stroke="#10b981" stroke-width="2.5"/>
+              <circle cx="40" cy="120" r="3.5" fill="#10b981"/>
+              <circle cx="120" cy="110" r="3.5" fill="#10b981"/>
+              <circle cx="200" cy="102" r="3.5" fill="#10b981"/>
+              <circle cx="280" cy="100" r="3.5" fill="#10b981"/>
+              <circle cx="360" cy="98" r="3.5" fill="#10b981"/>
+              <circle cx="420" cy="74" r="4" fill="#10b981"/>
+
+              <!-- X Labels -->
+              <text x="35" y="132" font-size="9" fill="#94a3b8">Nov 10</text>
+              <text x="110" y="132" font-size="9" fill="#94a3b8">Nov 11</text>
+              <text x="190" y="132" font-size="9" fill="#94a3b8">Nov 12</text>
+              <text x="270" y="132" font-size="9" fill="#94a3b8">Nov 13</text>
+              <text x="350" y="132" font-size="9" fill="#94a3b8">Nov 15</text>
+              <text x="405" y="132" font-size="9" fill="#94a3b8">Today</text>
+            </svg>
+
+            <!-- Live Daily Scraping Activity Breakdown -->
+            <div class="daily-scraping-breakdown" id="daily-scraping-breakdown" style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border-light);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <span style="font-size:11.5px; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:5px;">
+                  <span>📥</span> Daily Scraping Velocity
+                </span>
+                <span style="font-size:10.5px; color:var(--text-muted);" id="daily-scraping-subtitle">Scraping day by day</span>
+              </div>
+              <div id="daily-scraping-pills" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+            </div>
+          </div>
+
+          <!-- Card 2: Match by Role -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3><span>🎯</span> Match by Role</h3>
+            </div>
+
+            <div class="donut-wrap">
+              <div class="donut-svg-box">
+                <svg viewBox="0 0 100 100" style="width:100%; height:100%; transform: rotate(-90deg);">
+                  <!-- Background Circle -->
+                  <circle cx="50" cy="50" r="38" stroke="#f1f5f9" stroke-width="12" fill="none"/>
+                  <!-- Segment 1: QA Automation -->
+                  <circle id="donut-seg-1" cx="50" cy="50" r="38" stroke="#3b82f6" stroke-width="12" stroke-dasharray="0 238" stroke-dashoffset="0" fill="none"/>
+                  <!-- Segment 2: Manual Testing -->
+                  <circle id="donut-seg-2" cx="50" cy="50" r="38" stroke="#f59e0b" stroke-width="12" stroke-dasharray="0 238" stroke-dashoffset="0" fill="none"/>
+                  <!-- Segment 3: SDET -->
+                  <circle id="donut-seg-3" cx="50" cy="50" r="38" stroke="#8b5cf6" stroke-width="12" stroke-dasharray="0 238" stroke-dashoffset="0" fill="none"/>
+                  <!-- Segment 4: QA Lead / Architect -->
+                  <circle id="donut-seg-4" cx="50" cy="50" r="38" stroke="#10b981" stroke-width="12" stroke-dasharray="0 238" stroke-dashoffset="0" fill="none"/>
+                </svg>
+                <div class="donut-center-text">
+                  <strong id="donut-avg-match">92%</strong>
+                  <span>Avg Match</span>
+                </div>
+              </div>
+
+              <div class="donut-legend-list" id="donut-legend-list">
+                <div class="donut-legend-item">
+                  <span><span class="legend-dot blue"></span> QA Automation</span>
+                  <strong id="donut-stat-qa">--</strong>
+                </div>
+                <div class="donut-legend-item">
+                  <span><span class="legend-dot orange"></span> Manual Testing</span>
+                  <strong id="donut-stat-manual">--</strong>
+                </div>
+                <div class="donut-legend-item">
+                  <span><span class="legend-dot purple"></span> SDET</span>
+                  <strong id="donut-stat-sdet">--</strong>
+                </div>
+                <div class="donut-legend-item">
+                  <span><span class="legend-dot green"></span> QA Lead</span>
+                  <strong id="donut-stat-lead">--</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="demand-banner-pill" id="demand-banner-pill">
+              <span>🏆</span> Great! Vijay's QA Automation, Manual QA &amp; SDET skills are in high demand.
+            </div>
+          </div>
+
+          <!-- Card 3: Upcoming Interviews -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3><span>📅</span> Upcoming Interviews</h3>
+              <a href="#" onclick="switchToListTab('interview'); return false;" style="font-size:11.5px; font-weight:700; color:#2563eb; text-decoration:none;">View All →</a>
+            </div>
+
+            <div class="interview-list" id="dashboard-interview-list">
+              <div style="padding: 24px 14px; text-align: center; color: var(--text-muted); background: #f8fafc; border: 1px dashed var(--border-light); border-radius: 12px; margin: 4px 0;">
+                <div style="font-size: 24px; margin-bottom: 6px;">📅</div>
+                <div style="font-weight: 700; font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">No Interviews Scheduled Yet</div>
+                <div style="font-size: 11.5px; line-height: 1.4;">When an interview is scheduled, set the job status to <strong>Interview</strong> and it will appear here.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Bottom Grid (Application Pipeline | Quick Actions) -->
+        <section class="bottom-grid">
+          <!-- Application Pipeline Panel -->
+          <div class="pipeline-panel">
+            <div class="pipeline-header">
+              <h3><span>📋</span> Application Pipeline</h3>
+              <div class="pipeline-controls">
+                <select class="select-filter-pill" id="filter-role-select">
+                  <option value="all">All Roles</option>
+                  <option value="qa">QA Automation</option>
+                  <option value="manual">Manual Testing</option>
+                  <option value="sdet">SDET</option>
+                  <option value="lead">Lead QA</option>
+                </select>
+                <div class="view-toggle-wrap">
+                  <button class="view-toggle-btn active" id="btn-toggle-kanban">▦ Kanban</button>
+                  <button class="view-toggle-btn" id="btn-toggle-list">≣ List</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mini Kanban 5 Columns -->
+            <div class="mini-kanban-row" id="dashboard-kanban-row">
+              <!-- Col 1: Discovered -->
+              <div class="mini-kanban-col">
+                <div class="mini-col-header">
+                  <span>Discovered</span>
+                  <span class="col-badge-count blue" id="dash-count-discovered">0</span>
+                </div>
+                <div class="mini-cards-list" id="dash-cards-discovered"></div>
+                <a class="mini-view-all" onclick="switchToListTab('discovered')">View All →</a>
+              </div>
+
+              <!-- Col 2: Shortlisted -->
+              <div class="mini-kanban-col">
+                <div class="mini-col-header">
+                  <span>Shortlisted</span>
+                  <span class="col-badge-count purple" id="dash-count-shortlisted">0</span>
+                </div>
+                <div class="mini-cards-list" id="dash-cards-shortlisted"></div>
+                <a class="mini-view-all" onclick="switchToListTab('shortlisted')">View All →</a>
+              </div>
+
+              <!-- Col 3: Ready to Apply -->
+              <div class="mini-kanban-col">
+                <div class="mini-col-header">
+                  <span>Ready to Apply</span>
+                  <span class="col-badge-count green" id="dash-count-ready">0</span>
+                </div>
+                <div class="mini-cards-list" id="dash-cards-ready"></div>
+                <a class="mini-view-all" onclick="switchToListTab('ready')">View All →</a>
+              </div>
+
+              <!-- Col 4: Applied -->
+              <div class="mini-kanban-col">
+                <div class="mini-col-header">
+                  <span>Applied</span>
+                  <span class="col-badge-count orange" id="dash-count-applied">0</span>
+                </div>
+                <div class="mini-cards-list" id="dash-cards-applied"></div>
+                <a class="mini-view-all" onclick="switchToListTab('applied')">View All →</a>
+              </div>
+
+              <!-- Col 5: Interview -->
+              <div class="mini-kanban-col">
+                <div class="mini-col-header">
+                  <span>Interview</span>
+                  <span class="col-badge-count teal" id="dash-count-interview">0</span>
+                </div>
+                <div class="mini-cards-list" id="dash-cards-interview"></div>
+                <a class="mini-view-all" onclick="switchToListTab('interview')">View All →</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions Panel -->
+          <div class="quick-actions-panel">
+            <div>
+              <div class="qa-header">
+                <span>⚡</span> Quick Actions
+              </div>
+              <div class="qa-buttons-list">
+                <button class="qa-btn" id="qa-btn-fast-track" style="background: linear-gradient(135deg, rgba(124, 58, 237, 0.35), rgba(79, 70, 229, 0.45)); border: 1px solid rgba(167, 139, 250, 0.6); color:#fff; font-weight:800;">
+                  <span>⚡</span> Fast-Track Apply (50 Ready Jobs)
+                </button>
+                <button class="qa-btn" id="qa-btn-ai-toolkit" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(99, 102, 241, 0.25)); border: 1px solid rgba(56, 189, 248, 0.45);">
+                  <span>✨</span> AI Career Toolkit (ATS &amp; Coach)
+                </button>
+                <button class="qa-btn" id="qa-btn-scan">
+                  <span>🔍</span> Scan for New Jobs
+                </button>
+                <button class="qa-btn" id="qa-btn-resume">
+                  <span>📄</span> View Tailored Resume (CV)
+                </button>
+                <button class="qa-btn" id="qa-btn-cover-letter">
+                  <span>✉️</span> View Tailored Cover Letter
+                </button>
+                <button class="qa-btn" id="qa-btn-interview">
+                  <span>📅</span> Prepare for Interview
+                </button>
+                <button class="qa-btn" id="qa-btn-analytics">
+                  <span>📊</span> View Analytics
+                </button>
+              </div>
+            </div>
+
+            <div style="font-size:11px; color:#cbd5e1; opacity:0.8; margin-top:14px; text-align:center;">
+              ⚡ Powered by Playwright &amp; AI
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- TAB 2: ALL POSITIONS / TABLE -->
+      <div id="tab-applications" class="tab-pane dashboard-canvas">
+        <div class="panel-card">
+          <div class="panel-header">
+            <h3><span>📑</span> All Tracked Applications &amp; Opportunities (<span id="total-badge">0</span>)</h3>
+            <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+              <button class="btn btn-primary btn-sm" id="btn-fast-track-table" style="background:linear-gradient(135deg, #7c3aed, #4f46e5); font-weight:800; box-shadow:0 2px 6px rgba(124,58,237,0.3); border:none;">⚡ Fast-Track Apply (50)</button>
+              <button class="btn btn-primary btn-sm" id="btn-autopilot-table">⚡ Run Autopilot</button>
+              <button class="btn btn-outline btn-sm" id="btn-refresh-table">🔄 Refresh</button>
+            </div>
+          </div>
+
+          <!-- Application Status Filter Tabs -->
+          <div class="application-filter-bar" style="display:flex; gap:8px; padding:12px 18px; border-bottom:1px solid var(--border-light); background:#f8fafc; flex-wrap:wrap; align-items:center;">
+            <span style="font-size:12px; font-weight:700; color:var(--text-muted); margin-right:4px;">View:</span>
+            <button class="app-filter-pill active" data-filter="all" style="padding:5px 12px; border-radius:20px; font-size:12px; font-weight:700; border:1px solid var(--border-light); background:#fff; cursor:pointer;">
+              📋 All (<span id="filter-count-all">110</span>)
+            </button>
+            <button class="app-filter-pill" data-filter="pending" style="padding:5px 12px; border-radius:20px; font-size:12px; font-weight:700; border:1px solid var(--border-light); background:#fff; cursor:pointer; color:#6b21a8;">
+              ⏳ Need to Apply (<span id="filter-count-pending">108</span>)
+            </button>
+            <button class="app-filter-pill" data-filter="applied" style="padding:5px 12px; border-radius:20px; font-size:12px; font-weight:700; border:1px solid var(--border-light); background:#fff; cursor:pointer; color:#15803d;">
+              ✅ Applied (<span id="filter-count-applied">2</span>)
+            </button>
+            <button class="app-filter-pill" data-filter="interview" style="padding:5px 12px; border-radius:20px; font-size:12px; font-weight:700; border:1px solid var(--border-light); background:#fff; cursor:pointer; color:#c2410c;">
+              🎙️ Interviews (<span id="filter-count-interview">0</span>)
+            </button>
+
+            <!-- Scraped Date Filter Dropdown -->
+            <div style="margin-left:auto; display:flex; align-items:center; gap:6px;">
+              <span style="font-size:12px; color:var(--text-muted); font-weight:600;">Scraped:</span>
+              <select id="filter-date-select" style="padding:5px 12px; border-radius:20px; font-size:12px; font-weight:700; border:1px solid var(--border-light); background:#fff; cursor:pointer; color:var(--text-primary); outline:none;">
+                <option value="all">📅 All Dates</option>
+                <option value="today">📥 Scraped Today</option>
+                <option value="yesterday">📥 Scraped Yesterday</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width:46px; text-align:center;">⚖️</th>
+                  <th>Fit</th>
+                  <th>Company</th>
+                  <th>Role</th>
+                  <th style="min-width:140px;">📅 Listed &amp; Scraped</th>
+                  <th>Status</th>
+                  <th>Notes / Tech Stack</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: POLICYBAZAAR JOB COMPARISON -->
+      <div id="tab-compare" class="tab-pane dashboard-canvas">
+        <div class="compare-header-bar">
+          <div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-size:24px;">⚖️</span>
+              <h2 style="font-size:18px; font-weight:800; color:#0f172a;">PolicyBazaar-Style Job Comparison Matrix</h2>
+              <span style="background: var(--primary-light); color: var(--primary); font-size: 11px; font-weight:700; padding:3px 10px; border-radius:12px; border:1px solid #bfdbfe;">
+                Side-by-Side Multi-Market Benchmarking
+              </span>
+            </div>
+            <p style="color:var(--text-muted); font-size:13px; margin-top:4px;">
+              Compare opportunities side-by-side across Match Rating, Core Tech Requirements, Application Materials, and Official Career Portals.
+            </p>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <button class="btn btn-primary" id="btn-quick-compare-top" style="background: var(--primary-gradient); font-weight:700;">
+              ✨ Quick Compare Top 3 Matches (96%)
+            </button>
+            <button class="btn btn-outline" id="btn-clear-compare-all">Clear All</button>
+          </div>
+        </div>
+
+        <div id="compare-empty-state" class="compare-empty-state" style="display:none;">
+          <div style="font-size:48px; margin-bottom:12px;">⚖️</div>
+          <h3 style="font-size:18px; margin-bottom:6px;">No Jobs Selected for Comparison</h3>
+          <p style="color:var(--text-muted); max-width:520px; margin:8px auto 20px; font-size:13px; line-height:1.6;">
+            Select 2 to 4 roles from your <strong>Application Pipeline</strong> or <strong>All Positions Table</strong> using the <strong>⚖️ Compare</strong> checkboxes, or click below to benchmark top opportunities.
+          </p>
+          <button class="btn btn-primary" id="btn-empty-quick-compare" style="font-weight:700; background: var(--primary-gradient);">
+            ✨ Compare Top 3 High-Fit Roles Now
+          </button>
+        </div>
+
+        <div id="compare-matrix-container" class="compare-matrix-wrap"></div>
+      </div>
+
+      <!-- TAB: AI CAREER AGENT & CO-PILOT -->
+      <div id="tab-ai-agent" class="tab-pane dashboard-canvas">
+        <!-- Agent Header Banner -->
+        <div class="compare-header-bar" style="background: linear-gradient(135deg, #180d2b 0%, #311042 50%, #0f172a 100%); border: 1px solid rgba(236, 72, 153, 0.35); color: #fff; margin-bottom: 20px;">
+          <div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-size:26px;">🤖</span>
+              <h2 style="font-size:19px; font-weight:800; color:#fff;">AI Career Agent &amp; Personal Job Co-Pilot</h2>
+              <span style="background: rgba(236, 72, 153, 0.2); color: #f472b6; font-size: 11px; font-weight:800; padding:3px 10px; border-radius:12px; border:1px solid rgba(236, 72, 153, 0.4);">
+                Autonomous Co-Pilot Active
+              </span>
+            </div>
+            <p style="color:#e2e8f0; font-size:13px; margin-top:4px;">
+              Your dedicated AI job assistant: smart job matching, verified resume side-by-side diff tailoring, automated milestone follow-up cadence, and career-changer translation.
+            </p>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <button class="btn btn-primary" id="btn-agent-quick-chat" style="background:linear-gradient(135deg, #ec4899, #8b5cf6); border:none; font-weight:700; font-size:12px; color:#fff;">
+              💬 Open Chat Console
+            </button>
+            <a href="/api/pdf?file=cv/Vijay_Kumar_Senior_QA_CV.pdf&download=1" class="btn btn-outline" download style="color:#fff; border-color:rgba(255,255,255,0.3); text-decoration:none; font-size:12px;">📄 Master CV (PDF)</a>
+          </div>
+        </div>
+
+        <!-- Agent Sub-Navigation Tabs -->
+        <div class="agent-subnav">
+          <button class="agent-nav-btn active" data-subagent="tailor">
+            <span>📄</span> Resume Diff &amp; Tailor
+          </button>
+          <button class="agent-nav-btn" data-subagent="reminders">
+            <span>📅</span> Milestone Reminders (<span id="agent-reminders-badge">0</span>)
+          </button>
+          <button class="agent-nav-btn" data-subagent="skills">
+            <span>🔄</span> Transferable Skills &amp; Career Changer
+          </button>
+          <button class="agent-nav-btn" data-subagent="copilot">
+            <span>💬</span> Co-Pilot Chat Console
+          </button>
+        </div>
+
+        <!-- SUBAGENT 1: RESUME DIFF & TAILORING -->
+        <div id="subagent-tailor" class="agent-panel active">
+          <div class="ats-grid">
+            <!-- Left: Role & JD Input -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3><span>📄</span> Target Role &amp; Job Description</h3>
+                <span style="font-size:11px; color:var(--text-muted);">Side-by-side verification</span>
+              </div>
+              <div style="padding:16px;">
+                <div style="margin-bottom:12px;">
+                  <label style="display:block; font-size:12px; font-weight:700; color:var(--text-main); margin-bottom:4px;">Select from Tracked Jobs or Enter Custom</label>
+                  <select id="agent-tailor-job-selector" style="width:100%; padding:9px 12px; border:1px solid var(--border-light); border-radius:8px; font-size:13px; font-weight:600; outline:none; background:#fff;">
+                    <option value="">-- Choose tracked job or enter details below --</option>
+                  </select>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+                  <div>
+                    <label style="display:block; font-size:12px; font-weight:700; color:var(--text-main); margin-bottom:4px;">Company Name</label>
+                    <input type="text" id="agent-tailor-company" value="Capgemini" style="width:100%; padding:8px 12px; border:1px solid var(--border-light); border-radius:8px; font-size:13px; outline:none;">
+                  </div>
+                  <div>
+                    <label style="display:block; font-size:12px; font-weight:700; color:var(--text-main); margin-bottom:4px;">Target Role</label>
+                    <input type="text" id="agent-tailor-role" value="Playwright Automation" style="width:100%; padding:8px 12px; border:1px solid var(--border-light); border-radius:8px; font-size:13px; outline:none;">
+                  </div>
+                </div>
+
+                <div style="margin-bottom:14px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                    <label style="font-size:12px; font-weight:700; color:var(--text-main);">Job Requirements / Description</label>
+                    <button type="button" id="btn-agent-sample-jd" style="background:none; border:none; color:var(--primary); font-size:11.5px; font-weight:700; cursor:pointer;">⚡ Sample Requirements</button>
+                  </div>
+                  <textarea id="agent-tailor-jd" rows="7" placeholder="Paste job description requirements, technical stack, or qualifications..." style="width:100%; padding:10px 12px; border:1px solid var(--border-light); border-radius:8px; font-size:12.5px; line-height:1.5; outline:none; resize:vertical;">Playwright test automation, TypeScript, Page Object Model, CI/CD pipelines, API testing with Postman, and QA leadership.</textarea>
+                </div>
+
+                <button class="btn btn-primary" id="btn-run-agent-tailor" style="width:100%; padding:11px; font-size:14px; font-weight:700; background:linear-gradient(135deg, #ec4899, #8b5cf6); border:none; justify-content:center;">
+                  ⚡ Generate Side-by-Side Resume Diff &amp; Cover Letter
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: Side-by-Side Diff & Cover Letter -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <div>
+                  <h3 id="agent-diff-heading"><span>⚖️</span> Resume Realignment Diff</h3>
+                  <span id="agent-diff-subheading" style="font-size:11px; color:#059669; font-weight:700;">Capgemini • Playwright Automation</span>
+                </div>
+                <div style="display:flex; gap:6px;">
+                  <button class="btn btn-outline btn-sm" id="btn-agent-copy-tailored-cv">📋 Copy Tailored Text</button>
+                </div>
+              </div>
+
+              <div style="padding:16px; max-height:720px; overflow-y:auto;" id="agent-diff-body">
+                <!-- Dynamically rendered side-by-side diff -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBAGENT 2: MILESTONE REMINDERS & FOLLOW-UP CADENCE -->
+        <div id="subagent-reminders" class="agent-panel" style="display:none;">
+          <div class="panel-card" style="margin-bottom:16px;">
+            <div class="panel-header">
+              <div>
+                <h3 style="margin-bottom:2px;"><span>📅</span> Application Cadence &amp; Follow-Up Reminders</h3>
+                <p style="font-size:12.5px; color:var(--text-muted); margin:0;">
+                  Automated timing milestones: 24h post-interview thank you notes, 7-day review status checks, and ready-to-submit application batches.
+                </p>
+              </div>
+              <div class="interview-category-pills">
+                <button class="agent-rem-filter-pill active" data-filter="all">All Reminders (<span id="count-rem-all">0</span>)</button>
+                <button class="agent-rem-filter-pill" data-filter="urgent">🚨 24h Post-Interview</button>
+                <button class="agent-rem-filter-pill" data-filter="action">⚡ Ready to Apply</button>
+                <button class="agent-rem-filter-pill" data-filter="medium">⏳ Day 7+ Follow-Up</button>
+              </div>
+            </div>
+
+            <div id="agent-reminders-list" style="padding:16px; display:grid; grid-template-columns:repeat(auto-fill, minmax(420px, 1fr)); gap:16px;">
+              <!-- Cards rendered dynamically via app.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBAGENT 3: TRANSFERABLE SKILLS & CAREER CHANGER -->
+        <div id="subagent-skills" class="agent-panel" style="display:none;">
+          <div class="ats-grid">
+            <!-- Left: Transition Path Selector -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3><span>🔄</span> Career Transition Framework</h3>
+                <span class="pro-badge" style="background:#e0e7ff; color:#4338ca;">Skill Translation</span>
+              </div>
+              <div style="padding:16px;">
+                <label style="display:block; font-size:12px; font-weight:700; color:var(--text-main); margin-bottom:6px;">Select Transition Track</label>
+                <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
+                  <button class="outreach-type-btn active agent-track-btn" data-track="manual_to_automation">
+                    <strong>🚀 Manual Testing → SDET / Automation Lead</strong>
+                    <span>Transform defect instincts into automated Playwright/TypeScript suites</span>
+                  </button>
+                  <button class="outreach-type-btn agent-track-btn" data-track="support_to_qa">
+                    <strong>👥 Technical Support / Ops → QA Analyst</strong>
+                    <span>Leverage customer pain-point empathy and bug escalation expertise</span>
+                  </button>
+                  <button class="outreach-type-btn agent-track-btn" data-track="general_to_tech">
+                    <strong>🏢 Non-Tech Domain (Banking/Healthcare) → Tech QA</strong>
+                    <span>Capitalize on high-stakes business logic and regulatory compliance knowledge</span>
+                  </button>
+                </div>
+
+                <div style="background:#f8fafc; border:1px solid var(--border-light); border-radius:8px; padding:12px; font-size:12.5px; line-height:1.6; color:#475569;">
+                  💡 <strong>Career Strategist Insight:</strong> Hiring managers don't reject career changers because of their past; they reject them when their past is described in generic terms. Translating past tasks into target engineering outcomes instantly restores credibility.
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Translated Mappings & Interview Soundbite -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <div>
+                  <h3 id="agent-skills-heading"><span>🎯</span> Translated Competencies &amp; Soundbites</h3>
+                  <span id="agent-skills-subheading" style="font-size:11px; color:#4338ca; font-weight:700;">Manual &amp; Functional QA → SDET / Automation Lead</span>
+                </div>
+                <span class="status-badge" style="background:#dcfce7; color:#15803d; border-color:#86efac;">Verified Pattern</span>
+              </div>
+              <div style="padding:16px; max-height:680px; overflow-y:auto;" id="agent-skills-content">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBAGENT 4: CO-PILOT CHAT CONSOLE -->
+        <div id="subagent-copilot" class="agent-panel" style="display:none;">
+          <div class="chat-window">
+            <!-- Chat Header -->
+            <div style="padding:14px 20px; background:#ffffff; border-bottom:1px solid var(--border-light); display:flex; justify-content:space-between; align-items:center;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div class="chat-avatar agent">🤖</div>
+                <div>
+                  <strong style="font-size:14px; color:var(--text-main);">CareerAgent Co-Pilot</strong>
+                  <div style="font-size:11.5px; color:#10b981; font-weight:700;">● Online • Configured with Vijay Kumar's Profile</div>
+                </div>
+              </div>
+              <button class="btn btn-outline btn-sm" id="btn-agent-clear-chat" style="font-size:11.5px;">🧹 Reset Chat</button>
+            </div>
+
+            <!-- Chat History -->
+            <div class="chat-history" id="agent-chat-history">
+              <!-- Welcome Message -->
+              <div class="chat-msg agent">
+                <div class="chat-avatar agent">🤖</div>
+                <div class="chat-bubble">
+                  Hello Vijay! I am your <strong>AI Career Agent Co-Pilot</strong>. I am fully loaded with your candidate profile (Senior QA Automation, Playwright, TypeScript, CI/CD, 15-day notice) and current application tracker.
+                  <br><br>
+                  How can I help you today? You can ask me to tailor your resume for a job, draft a follow-up email, rehearse STAR interview answers, or evaluate a job posting.
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Suggestions Bar -->
+            <div style="padding:10px 16px; background:#ffffff; border-top:1px solid #f1f5f9; display:flex; gap:8px; overflow-x:auto;" id="agent-chat-quick-chips">
+              <button class="chat-prompt-pill" data-prompt="Show my active follow-up reminders">📅 Check Follow-ups</button>
+              <button class="chat-prompt-pill" data-prompt="How do I explain moving from manual QA to automation in an interview?">🎙️ Explain QA Transition</button>
+              <button class="chat-prompt-pill" data-prompt="Draft a polite follow-up email for Capgemini">✉️ Draft Capgemini Follow-Up</button>
+              <button class="chat-prompt-pill" data-prompt="What are smart questions to ask the Engineering Manager?">🙋 Smart Questions to Ask</button>
+            </div>
+
+            <!-- Chat Input Form -->
+            <form id="agent-chat-form" style="display:flex; padding:12px 16px; background:#ffffff; border-top:1px solid var(--border-light); gap:10px;">
+              <input type="text" id="agent-chat-input" placeholder="Ask anything, paste a job requirement, or request an email draft..." style="flex:1; padding:10px 14px; border:1px solid var(--border-light); border-radius:8px; font-size:13px; outline:none;" autocomplete="off">
+              <button type="submit" class="btn btn-primary" id="btn-agent-send-chat" style="background:linear-gradient(135deg, #ec4899, #8b5cf6); border:none; font-weight:700; padding:10px 20px;">
+                Send 🚀
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: AI CAREER TOOLKIT (AIApply.co Style) -->
+      <div id="tab-ai-toolkit" class="tab-pane dashboard-canvas">
+        <!-- Toolkit Header -->
+        <div class="compare-header-bar" style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0c1322 100%); border: 1px solid rgba(99, 102, 241, 0.3); color: #fff; margin-bottom: 20px;">
+          <div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <span style="font-size:26px;">✨</span>
+              <h2 style="font-size:19px; font-weight:800; color:#fff;">AI Career Toolkit &amp; Job Automation Suite</h2>
+              <span style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; font-size: 11px; font-weight:800; padding:3px 10px; border-radius:12px; border:1px solid rgba(56, 189, 248, 0.4);">
+                AIApply.co Pro Mode Active
+              </span>
+            </div>
+            <p style="color:#cbd5e1; font-size:13px; margin-top:4px;">
+              Analyze ATS resume match, practice role-specific STAR interview questions, generate recruiter outreach emails, and 1-click auto-fill official company career portals.
+            </p>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <a href="/api/pdf?file=cv/Vijay_Kumar_Senior_QA_CV.pdf&download=1" class="btn btn-outline" download style="color:#fff; border-color:rgba(255,255,255,0.3); text-decoration:none; font-size:12px;">📄 Master CV (PDF)</a>
+            <a href="/api/pdf?file=cover_letters/Vijay_Kumar_Cover_Letter.pdf&download=1" class="btn btn-outline" download style="color:#fff; border-color:rgba(255,255,255,0.3); text-decoration:none; font-size:12px;">✉️ Master Cover Letter (PDF)</a>
+          </div>
+        </div>
+
+        <!-- Toolkit Sub-Nav Tabs -->
+        <div class="toolkit-subnav">
+          <button class="toolkit-nav-btn active" data-subtool="ats">
+            <span>🎯</span> ATS Score &amp; Resume Optimizer
+          </button>
+          <button class="toolkit-nav-btn" data-subtool="interview">
+            <span>🎙️</span> AI Interview Simulator &amp; STAR Coach
+          </button>
+          <button class="toolkit-nav-btn" data-subtool="outreach">
+            <span>💬</span> Recruiter Outreach &amp; Follow-up
+          </button>
+          <button class="toolkit-nav-btn" data-subtool="autofill">
+            <span>⚡</span> 1-Click Auto-Apply Portal Assistant
+          </button>
+          <button class="toolkit-nav-btn" data-subtool="strategist">
+            <span>🧭</span> Job Application Strategist
+          </button>
+        </div>
+
+        <!-- SUBTOOL 1: ATS SCORE & RESUME OPTIMIZER -->
+        <div id="subtool-ats" class="toolkit-panel active">
+          <div class="ats-grid">
+            <!-- Left: Input & Role Selector -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3><span>🎯</span> Job Description Scanner</h3>
+                <span style="font-size:11px; color:var(--text-muted);">Paste or choose from pipeline</span>
+              </div>
+              <div style="padding:16px;">
+                <div style="margin-bottom:12px;">
+                  <label style="display:block; font-size:12px; font-weight:700; color:var(--text-main); margin-bottom:4px;">Select from Tracked Jobs or Custom</label>
+                  <select id="ats-job-selector" style="width:100%; padding:9px 12px; border:1px solid var(--border-light); border-radius:8px; font-size:13px; font-weight:600; outline:none; background:#fff;">
+                    <option value="">-- Choose a tracked position or enter custom below --</option>
+                  </select>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+                  <div>
+                    <label style="display:block; font-size:12px; font-weight:700; color:var(--text-main); margin-bottom:4px;">Target Role</label>
+                    <input type="text" id="ats-input-role" value="Senior QA Engineer (Automation &amp; Manual Testing)" style="width:100%; padding:8px 12px; border:1px solid var(--border-light); border-radius:8px; font-size:13px; outline:none;">
+                  </div>
+                  <div>
+                    <label style="display:block; font-size:12px; font-weight:700; color:var(--text-main); margin-bottom:4px;">Target Company</label>
+                    <input type="text" id="ats-input-company" value="Willware Technologies" style="width:100%; padding:8px 12px; border:1px solid var(--border-light); border-radius:8px; font-size:13px; outline:none;">
+                  </div>
+                </div>
+
+                <div style="margin-bottom:14px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                    <label style="font-size:12px; font-weight:700; color:var(--text-main);">Paste Job Description (JD)</label>
+                    <button type="button" id="btn-load-sample-jd" style="background:none; border:none; color:var(--primary); font-size:11.5px; font-weight:700; cursor:pointer;">⚡ Load Sample SDET JD</button>
+                  </div>
+                  <textarea id="ats-input-jd" rows="8" placeholder="Paste the full job requirements, required technical skills, responsibilities, or qualifications here..." style="width:100%; padding:10px 12px; border:1px solid var(--border-light); border-radius:8px; font-size:12.5px; font-family:inherit; line-height:1.5; outline:none; resize:vertical;"></textarea>
+                </div>
+
+                <button class="btn btn-primary" id="btn-run-ats-scan" style="width:100%; padding:11px; font-size:14px; font-weight:700; background:var(--primary-gradient); justify-content:center;">
+                  ⚡ Analyze ATS Match &amp; Keywords
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: Results & Optimization Dashboard -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3><span>📊</span> ATS Evaluation &amp; Optimization</h3>
+                <span class="pro-badge" id="ats-verdict-badge">Strong Fit</span>
+              </div>
+              <div style="padding:16px;">
+                <!-- Match Score Dial -->
+                <div class="ats-score-display">
+                  <div class="ats-gauge-circle">
+                    <span class="ats-gauge-val" id="ats-result-score">96%</span>
+                    <span class="ats-gauge-sub">ATS Match</span>
+                  </div>
+                  <div class="ats-score-text">
+                    <h4 id="ats-result-title" style="font-size:16px; font-weight:800; color:var(--text-main); margin-bottom:4px;">Excellent Keyword &amp; Skills Alignment</h4>
+                    <p id="ats-result-desc" style="font-size:12.5px; color:var(--text-muted); line-height:1.5;">Your Playwright, TypeScript, CI/CD pipeline automation, and team leadership experience strongly match the role requirements.</p>
+                  </div>
+                </div>
+
+                <!-- Matched Keywords -->
+                <div style="margin-top:16px;">
+                  <h5 style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#10b981; margin-bottom:6px;">
+                    ✅ Matched ATS Keywords (<span id="ats-count-matched">8</span>)
+                  </h5>
+                  <div class="keyword-chips-wrap" id="ats-chips-matched">
+                    <span class="kw-chip matched">Playwright</span>
+                    <span class="kw-chip matched">TypeScript</span>
+                    <span class="kw-chip matched">Page Object Model</span>
+                    <span class="kw-chip matched">CI/CD Pipelines</span>
+                    <span class="kw-chip matched">API Testing</span>
+                    <span class="kw-chip matched">JIRA</span>
+                    <span class="kw-chip matched">QA Team Leadership</span>
+                    <span class="kw-chip matched">Regression Testing</span>
+                  </div>
+                </div>
+
+                <!-- Missing Keywords -->
+                <div style="margin-top:14px;">
+                  <h5 style="font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.5px; color:#f59e0b; margin-bottom:6px;">
+                    ⚠️ Gaps / Missing Keywords (<span id="ats-count-missing">3</span>)
+                  </h5>
+                  <div class="keyword-chips-wrap" id="ats-chips-missing">
+                    <span class="kw-chip missing">Docker</span>
+                    <span class="kw-chip missing">Kubernetes</span>
+                    <span class="kw-chip missing">k6 Performance</span>
+                  </div>
+                </div>
+
+                <!-- Actionable Recommendations -->
+                <div style="margin-top:16px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px;">
+                  <h5 style="font-size:12px; font-weight:800; color:var(--text-main); margin-bottom:6px;">💡 AI Tailoring Recommendations</h5>
+                  <ul id="ats-recommendations-list" style="margin:0; padding-left:18px; font-size:12px; color:var(--text-muted); line-height:1.6;">
+                    <li>Highlight your 60% test runtime reduction metric prominently in the summary.</li>
+                    <li>Emphasize your leadership of 5 QA Technicians at Devkraft Technologies.</li>
+                    <li>Note containerized CI/CD test execution runners to satisfy container infrastructure expectations.</li>
+                  </ul>
+                </div>
+
+                <!-- Action Button Row -->
+                <div style="display:flex; gap:10px; margin-top:16px;">
+                  <button class="btn btn-outline" id="btn-ats-view-cv" style="flex:1; justify-content:center;">
+                    📄 View 1-Page Tailored CV
+                  </button>
+                  <button class="btn btn-outline" id="btn-ats-view-cl" style="flex:1; justify-content:center;">
+                    ✉️ View Cover Letter
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBTOOL 2: AI INTERVIEW SIMULATOR & STAR COACH -->
+        <div id="subtool-interview" class="toolkit-panel" style="display:none;">
+          <div class="panel-card" style="margin-bottom:16px;">
+            <div class="panel-header">
+              <div>
+                <h3 style="margin-bottom:2px;"><span>🎙️</span> AI Interview Simulator &amp; STAR Coach</h3>
+                <p style="font-size:12.5px; color:var(--text-muted); margin:0;">
+                  Targeted questions calibrated for Senior QA Engineers, SDETs, and QA Leads. Includes proven STAR responses from Vijay's real-world engineering track record.
+                </p>
+              </div>
+              <div class="interview-category-pills">
+                <button class="interview-cat-pill active" data-cat="all">All Questions</button>
+                <button class="interview-cat-pill" data-cat="technical">🚀 Playwright &amp; Tech</button>
+                <button class="interview-cat-pill" data-cat="leadership">👥 QA Leadership</button>
+                <button class="interview-cat-pill" data-cat="defect_triage">🔍 Defect Triage</button>
+                <button class="interview-cat-pill" data-cat="behavioral">💡 Behavioral</button>
+                <button class="interview-cat-pill" data-cat="questions_to_ask">🙋‍♂️ Questions to Ask</button>
+              </div>
+            </div>
+
+            <div id="interview-cards-container" style="padding:16px; display:flex; flex-direction:column; gap:14px;">
+              <!-- Cards rendered dynamically via app.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBTOOL 3: RECRUITER OUTREACH & FOLLOW-UP -->
+        <div id="subtool-outreach" class="toolkit-panel" style="display:none;">
+          <div class="ats-grid">
+            <!-- Left: Form Controls -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3><span>💬</span> Message Composer</h3>
+                <span style="font-size:11px; color:var(--text-muted);">Hiring Manager &amp; Recruiter outreach</span>
+              </div>
+              <div style="padding:16px;">
+                <div style="margin-bottom:12px;">
+                  <label style="display:block; font-size:12px; font-weight:700; color:var(--text-main); margin-bottom:4px;">Outreach Scenario</label>
+                  <div class="outreach-type-grid">
+                    <button class="outreach-type-btn active" data-type="hiring_manager">
+                      <strong>👔 Hiring Manager Pitch</strong>
+                      <span>Cold executive outreach</span>
+                    </button>
+                    <button class="outreach-type-btn" data-type="recruiter">
+                      <strong>🤝 Recruiter InMail</strong>
+                      <span>Short note (&lt;300 chars)</span>
+                    </button>
+                    <button class="outreach-type-btn" data-type="thank_you">
+                      <strong>⏳ Post-Interview Thank You</strong>
+                      <span>Value-add follow-up</span>
+                    </button>
+                    <button class="outreach-type-btn" data-type="follow_up">
+                      <strong>🚀 Application Status Check</strong>
+                      <span>1-2 weeks post-apply</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+                  <div>
+                    <label style="display:block; font-size:12px; font-weight:700; color:var(--text-main); margin-bottom:4px;">Target Company</label>
+                    <input type="text" id="outreach-input-company" value="Willware Technologies" style="width:100%; padding:8px 12px; border:1px solid var(--border-light); border-radius:8px; font-size:13px; outline:none;">
+                  </div>
+                  <div>
+                    <label style="display:block; font-size:12px; font-weight:700; color:var(--text-main); margin-bottom:4px;">Recipient Name</label>
+                    <input type="text" id="outreach-input-recipient" value="Hiring Manager" style="width:100%; padding:8px 12px; border:1px solid var(--border-light); border-radius:8px; font-size:13px; outline:none;">
+                  </div>
+                </div>
+
+                <div style="margin-bottom:16px;">
+                  <label style="display:block; font-size:12px; font-weight:700; color:var(--text-main); margin-bottom:4px;">Job Title</label>
+                  <input type="text" id="outreach-input-role" value="Senior QA Automation Lead - Playwright Testing" style="width:100%; padding:8px 12px; border:1px solid var(--border-light); border-radius:8px; font-size:13px; outline:none;">
+                </div>
+
+                <button class="btn btn-primary" id="btn-generate-outreach" style="width:100%; padding:11px; font-size:14px; font-weight:700; background:var(--primary-gradient); justify-content:center;">
+                  ✨ Generate Tailored Message
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: Generated Message Preview -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <div>
+                  <h3 id="outreach-preview-heading"><span>✉️</span> Generated Message</h3>
+                  <span id="outreach-type-pill" style="font-size:11px; color:var(--primary); font-weight:700;">Hiring Manager Cold Pitch</span>
+                </div>
+                <button class="btn btn-primary btn-sm" id="btn-copy-outreach">📋 Copy Message</button>
+              </div>
+              <div style="padding:16px;">
+                <div style="margin-bottom:12px;">
+                  <label style="display:block; font-size:11.5px; font-weight:700; color:var(--text-muted); margin-bottom:4px;">SUBJECT LINE</label>
+                  <div style="display:flex; gap:6px;">
+                    <input type="text" id="outreach-subject-box" readonly style="flex:1; padding:8px 12px; font-family:'JetBrains Mono', monospace; font-size:12px; background:#f8fafc; border:1px solid var(--border-light); border-radius:6px; font-weight:700; color:var(--text-main);" value="Senior QA Automation Lead (Playwright / TS / CI/CD) - Willware Technologies">
+                    <button class="btn btn-outline btn-sm" id="btn-copy-subject" title="Copy Subject">📋</button>
+                  </div>
+                </div>
+
+                <div>
+                  <label style="display:block; font-size:11.5px; font-weight:700; color:var(--text-muted); margin-bottom:4px;">MESSAGE BODY</label>
+                  <textarea id="outreach-body-box" readonly rows="12" style="width:100%; padding:12px; font-family:inherit; font-size:13px; line-height:1.6; background:#f8fafc; border:1px solid var(--border-light); border-radius:8px; resize:none; color:var(--text-main);"></textarea>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; font-size:11.5px; color:var(--text-muted);">
+                  <span>💡 <strong>Pro Tip:</strong> Send between 9:00 AM – 11:00 AM Tuesday–Thursday for highest response rate.</span>
+                  <span id="outreach-char-count">0 characters</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBTOOL 4: 1-CLICK AUTO-APPLY PORTAL ASSISTANT -->
+        <div id="subtool-autofill" class="toolkit-panel" style="display:none;">
+          <div class="panel-card" style="margin-bottom:16px;">
+            <div class="panel-header">
+              <div>
+                <h3 style="margin-bottom:2px;"><span>⚡</span> 1-Click Auto-Apply Portal Assistant</h3>
+                <p style="font-size:12.5px; color:var(--text-muted); margin:0;">
+                  Pre-fills official career portals (Greenhouse, Lever, BambooHR, Workday, etc.) using Playwright desktop automation, and provides instant 1-click answers for tedious application essay fields.
+                </p>
+              </div>
+              <span class="pro-badge">Playwright Powered</span>
+            </div>
+
+            <div style="padding:16px;">
+              <!-- Quick Bot Launcher Bar -->
+              <div style="background:linear-gradient(135deg, #f8fafc, #eff6ff); border:1px solid #bfdbfe; border-radius:10px; padding:16px; margin-bottom:20px;">
+                <h4 style="font-size:13.5px; font-weight:800; color:#1e3a8a; margin-bottom:6px;">🚀 Launch Automated Browser Fill</h4>
+                <p style="font-size:12px; color:#3b82f6; margin-bottom:10px;">Paste any official company career portal URL below to open a live automated Playwright session with Vijay's candidate specs pre-filled.</p>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                  <input type="url" id="autofill-portal-url" placeholder="https://boards.greenhouse.io/... or https://jobs.lever.co/..." style="flex:1; min-width:280px; padding:10px 14px; border:1px solid #93c5fd; border-radius:8px; font-size:13px; outline:none;">
+                  <button class="btn btn-primary" id="btn-launch-autofill-bot" style="font-weight:700; background:var(--primary-gradient); padding:10px 18px;">
+                    ⚡ Launch Auto-Fill Bot
+                  </button>
+                </div>
+                <!-- Quick Link & Document Shortcuts Bar -->
+                <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; align-items:center;">
+                  <a id="btn-quick-open-portal" href="#" target="_blank" class="btn btn-outline btn-sm" style="font-size:12px; font-weight:700; color:#0284c7; border-color:#bae6fd; background:#f0f9ff; text-decoration:none; display:none; align-items:center; gap:5px;" title="Open this portal in a new browser tab">
+                    🏢 Open Portal Link ↗
+                  </a>
+                  <a href="/api/pdf?file=cv/Vijay_Kumar_Senior_QA_CV.pdf&download=1" class="btn btn-outline btn-sm" download style="font-size:12px; font-weight:700; color:#1e40af; border-color:#bfdbfe; background:#fff; display:inline-flex; align-items:center; gap:5px;" title="Download Vijay's Tailored CV">
+                    📄 Download CV (PDF)
+                  </a>
+                  <a href="/api/pdf?file=cover_letters/Vijay_Kumar_Cover_Letter.pdf&download=1" class="btn btn-outline btn-sm" download style="font-size:12px; font-weight:700; color:#7c3aed; border-color:#ddd6fe; background:#fff; display:inline-flex; align-items:center; gap:5px;" title="Download Vijay's Cover Letter">
+                    ✉️ Download Cover Letter
+                  </a>
+                </div>
+                <!-- Status Guidance Box -->
+                <div id="autofill-status-box" style="display:none; margin-top:14px; padding:12px 16px; background:#ffffff; border:1px solid #93c5fd; border-left:4px solid #3b82f6; border-radius:8px; font-size:12.5px; line-height:1.6; color:#1e3a8a; box-shadow:0 2px 6px rgba(59,130,246,0.08);">
+                  <!-- Dynamically populated -->
+                </div>
+              </div>
+
+              <!-- Quick Copy Field Answers -->
+              <h4 style="font-size:14px; font-weight:800; color:var(--text-main); margin-bottom:10px;">📋 Instant 1-Click ATS Form Answers</h4>
+              <div class="autofill-snippets-grid" id="autofill-snippets-list">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUBTOOL 5: JOB APPLICATION STRATEGIST -->
+        <div id="subtool-strategist" class="toolkit-panel" style="display:none;">
+          <div class="ats-grid">
+            <!-- Left: Strategist Input Controls -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <div>
+                  <h3 style="margin-bottom:2px;"><span>🧭</span> Application Strategy Planner</h3>
+                  <span style="font-size:11px; color:var(--text-muted);">Company career page &amp; high-interview conversion tactics</span>
+                </div>
+                <span class="pro-badge" style="background:rgba(16, 185, 129, 0.15); color:#059669; border:1px solid #10b981;">Targeted Strategy</span>
+              </div>
+              <div style="padding:16px;">
+                <div style="margin-bottom:12px;">
+                  <label style="display:block; font-size:12px; font-weight:700; color:var(--text-main); margin-bottom:4px;">Select from Pipeline</label>
+                  <select id="strat-job-selector" style="width:100%; padding:9px 12px; border:1px solid var(--border-light); border-radius:8px; font-size:13px; font-weight:600; outline:none; background:#fff;">
+                    <option value="">-- Choose tracked job or enter details below --</option>
+                  </select>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+                  <div>
+                    <label style="display:block; font-size:12px; font-weight:700; color:var(--text-main); margin-bottom:4px;">Company Name</label>
+                    <input type="text" id="strat-input-company" value="Willware Technologies" style="width:100%; padding:8px 12px; border:1px solid var(--border-light); border-radius:8px; font-size:13px; outline:none;">
+                  </div>
+                  <div>
+                    <label style="display:block; font-size:12px; font-weight:700; color:var(--text-main); margin-bottom:4px;">Target Role</label>
+                    <input type="text" id="strat-input-role" value="Senior QA Automation Lead - Playwright Testing" style="width:100%; padding:8px 12px; border:1px solid var(--border-light); border-radius:8px; font-size:13px; outline:none;">
+                  </div>
+                </div>
+
+                <div style="margin-bottom:14px;">
+                  <label style="display:block; font-size:12px; font-weight:700; color:var(--text-main); margin-bottom:4px;">Job Description / Key Requirements</label>
+                  <textarea id="strat-input-jd" rows="5" placeholder="Paste requirements or let auto-fill from pipeline..." style="width:100%; padding:10px 12px; border:1px solid var(--border-light); border-radius:8px; font-size:12.5px; outline:none; resize:none;">Playwright, TypeScript, CI/CD, automation framework architecture, API testing, QA leadership.</textarea>
+                </div>
+
+                <button class="btn btn-primary" id="btn-generate-strategy" style="width:100%; padding:11px; font-size:13.5px; font-weight:700; background:var(--primary-gradient); justify-content:center;">
+                  🧭 Formulate High-Conversion Strategy
+                </button>
+
+                <!-- Direct Sourcing Search Helpers -->
+                <div style="margin-top:16px; background:#f8fafc; border:1px dashed var(--border-light); border-radius:8px; padding:12px;">
+                  <span style="display:block; font-size:11.5px; font-weight:700; color:var(--text-muted); margin-bottom:6px;">🔎 DIRECT CAREER PAGE SEARCH SHORTCUTS</span>
+                  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <a id="strat-link-google" href="https://www.google.com/search?q=Willware+Technologies+careers+Senior+QA" target="_blank" class="btn btn-outline btn-sm" style="font-size:11.5px; text-decoration:none;">🏢 Google Careers Page ↗</a>
+                    <a id="strat-link-ats" href="https://www.google.com/search?q=(site:boards.greenhouse.io+OR+site:jobs.lever.co)+Willware+Technologies" target="_blank" class="btn btn-outline btn-sm" style="font-size:11.5px; text-decoration:none;">⚡ Direct ATS Search ↗</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Tailored Strategy Roadmap & Outreach Materials -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <div>
+                  <h3 id="strat-heading"><span>🎯</span> Strategic Playbook</h3>
+                  <span id="strat-subheading" style="font-size:11px; color:var(--primary); font-weight:700;">Willware Technologies • Senior QA Automation Lead</span>
+                </div>
+                <span class="status-badge" style="background:#dcfce7; color:#15803d; border-color:#86efac;">Verified Blueprint</span>
+              </div>
+              <div style="padding:16px; max-height:680px; overflow-y:auto;" id="strat-content-body">
+                <!-- Pillars rendered dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: CANDIDATE PROFILE -->
+      <div id="tab-profile" class="tab-pane dashboard-canvas">
+        <div class="panel-card" style="max-width: 900px; margin: 0 auto; width: 100%;">
+          <div class="panel-header">
+            <h3><span>👤</span> Candidate Profile • Vijay Kumar</h3>
+            <span class="pro-badge" style="font-size:12px; padding:4px 10px;">Senior QA / SDET Lead</span>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px;">
+            <div>
+              <h4 style="font-size:14px; margin-bottom:8px; color:var(--text-main);">🎯 Core Tech Stack</h4>
+              <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                <span class="compare-check-pill yes">Playwright</span>
+                <span class="compare-check-pill yes">TypeScript</span>
+                <span class="compare-check-pill yes">JavaScript</span>
+                <span class="compare-check-pill yes">Java Selenium</span>
+                <span class="compare-check-pill yes">CI/CD (GitHub Actions / Jenkins)</span>
+                <span class="compare-check-pill yes">QA Team Leadership (5 Technicians)</span>
+                <span class="compare-check-pill yes">API Automation (Postman)</span>
+                <span class="compare-check-pill yes">BrowserStack</span>
+              </div>
+            </div>
+            <div>
+              <h4 style="font-size:14px; margin-bottom:8px; color:var(--text-main);">📄 Master Application Materials</h4>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <a href="/api/pdf?file=cv/Vijay_Kumar_Senior_QA_CV.pdf&download=1" class="btn btn-outline" download style="text-decoration:none;">📥 Master CV (PDF)</a>
+                <a href="/api/pdf?file=cover_letters/Vijay_Kumar_Cover_Letter.pdf&download=1" class="btn btn-outline" download style="text-decoration:none;">📥 Master Cover Letter (PDF)</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: COMPANY RESEARCH -->
+      <div id="tab-company" class="tab-pane dashboard-canvas">
+        <!-- Top Banner -->
+        <div class="panel-card" style="margin-bottom: 20px; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 60%, #0c1322 100%); color: #fff; border: 1px solid rgba(99, 102, 241, 0.3);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                <span style="font-size: 20px;">🏢</span>
+                <h2 style="font-size: 20px; font-weight: 800; color: #fff; margin: 0;">Company Research &amp; Intelligence Hub</h2>
+              </div>
+              <p style="font-size: 13px; color: #94a3b8; margin: 0;">
+                Investigate engineering cultures, direct ATS career portals, interview reviews, and tailored interview talking points for any target employer.
+              </p>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+              <select id="company-research-selector" style="padding: 9px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.25); background: #1e293b; color: #fff; font-size: 13px; outline: none; font-weight: 600; min-width: 240px;">
+                <option value="">-- Choose a tracked company --</option>
+              </select>
+              <button class="btn btn-primary" id="btn-analyze-company" style="font-weight: 700; background: var(--primary-gradient);">
+                🔍 Inspect Intel
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Intel Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <!-- Card 1: Verified Direct Career & Research Links -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3 style="margin: 0;"><span>🏢</span> <span id="company-intel-name">Willware Technologies</span> • Portals &amp; Research</h3>
+              <span class="pro-badge" id="company-intel-sector" style="font-size: 11px;">Tech</span>
+            </div>
+            <div style="padding: 18px;">
+              <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;" id="company-intel-desc">
+                High-growth technology partner delivering enterprise web, cloud, and test automation solutions.
+              </p>
+
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <a id="company-link-portal" href="https://www.google.com/search?q=Willware+Technologies+careers" target="_blank" class="btn btn-outline" style="text-decoration: none; justify-content: space-between; font-weight: 700;">
+                  <span>🌐 Official Company Career Portal</span> <span>↗</span>
+                </a>
+                <a id="company-link-ats" href="https://www.google.com/search?q=(site:boards.greenhouse.io+OR+site:jobs.lever.co+OR+site:oraclecloud.com)+Willware+Technologies" target="_blank" class="btn btn-outline" style="text-decoration: none; justify-content: space-between; font-weight: 700;">
+                  <span>⚡ Direct ATS Search (Greenhouse / Lever / Workday)</span> <span>↗</span>
+                </a>
+                <a id="company-link-news" href="https://www.google.com/search?q=Willware+Technologies+software+engineering+news" target="_blank" class="btn btn-outline" style="text-decoration: none; justify-content: space-between;">
+                  <span>📰 Tech &amp; Engineering News</span> <span>↗</span>
+                </a>
+                <a id="company-link-glassdoor" href="https://www.google.com/search?q=Willware+Technologies+QA+interview+questions+Glassdoor+AmbitionBox" target="_blank" class="btn btn-outline" style="text-decoration: none; justify-content: space-between;">
+                  <span>💼 Interview Feedback &amp; Salaries (Glassdoor / AmbitionBox)</span> <span>↗</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Open Roles at this Company in Pipeline -->
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3 style="margin: 0;"><span>🎯</span> Open Opportunities in Your Tracker (<span id="company-jobs-count">1</span>)</h3>
+            </div>
+            <div style="padding: 16px;">
+              <div id="company-jobs-list" style="display: flex; flex-direction: column; gap: 10px; max-height: 260px; overflow-y: auto;">
+                <!-- Dynamically rendered roles -->
+              </div>
+
+              <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border-light); display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn btn-primary btn-sm" id="btn-company-outreach" style="font-weight: 700;">
+                  ✉️ Draft Recruiter Outreach
+                </button>
+                <button class="btn btn-outline btn-sm" id="btn-company-strategy" style="font-weight: 700;">
+                  🧭 View Application Strategy
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Quality Architecture & Interview Talking Points for Vijay -->
+          <div class="panel-card" style="grid-column: 1 / -1;">
+            <div class="panel-header">
+              <h3 style="margin: 0;"><span>💡</span> Tailored Interview Strategy &amp; Talking Points for Vijay Kumar</h3>
+              <span class="status-badge" style="background:#dcfce7; color:#15803d; border-color:#86efac;">Ready for Screening</span>
+            </div>
+            <div style="padding: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+              <div style="background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid var(--border-light);">
+                <h4 style="font-size: 13px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">🔑 High-Impact Talking Points to Lead With:</h4>
+                <ul style="font-size: 12.5px; line-height: 1.6; color: #334155; margin-left: 18px;">
+                  <li><strong>60% Regression Cut:</strong> How you designed a modular Playwright + TypeScript framework with POM at Devkraft Technologies that eliminated flaky tests and reduced runtime by 60%.</li>
+                  <li><strong>Dual Competency (Manual + Automation):</strong> You establish rigorous STLC test cases, exploratory boundary checks, and bug triage before converting manual regression into automated CI/CD gates.</li>
+                  <li><strong>QA Team Leadership:</strong> Mentored 5 QA technicians, standardized JIRA workflows, and managed UAT sign-offs with zero critical defect escapes for financial &amp; enterprise platforms.</li>
+                </ul>
+              </div>
+              <div style="background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid var(--border-light);">
+                <h4 style="font-size: 13px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">❓ Powerful Questions Vijay Should Ask the Interviewer:</h4>
+                <ul style="font-size: 12.5px; line-height: 1.6; color: #334155; margin-left: 18px;">
+                  <li><em>"How closely does your QA team partner with developers during sprint planning, and at what stage are automated quality gates triggered in your deployment pipeline?"</em></li>
+                  <li><em>"What is your current test coverage balance between manual exploratory testing and automated E2E suites?"</em></li>
+                  <li><em>"What are the highest-priority quality milestones or architectural improvements you want the QA lead to drive in the first 90 days?"</em></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 6: SETTINGS -->
+      <div id="tab-settings" class="tab-pane dashboard-canvas">
+        <div class="panel-card" style="max-width: 960px; margin: 0 auto; width: 100%;">
+          <div class="panel-header">
+            <h3><span>⚙️</span> CareerPilot Settings &amp; Automation Configuration</h3>
+            <span class="pro-badge">Active Engine</span>
+          </div>
+
+          <div style="padding: 20px; display: flex; flex-direction: column; gap: 24px;">
+            <!-- Section 1: Background Scraper & Autopilot -->
+            <div style="background: #f8fafc; border: 1px solid var(--border-light); border-radius: 10px; padding: 18px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                <div>
+                  <h4 style="font-size: 15px; font-weight: 800; color: #0f172a; margin: 0;">🤖 Automated Background Job Scraper</h4>
+                  <p style="font-size: 12.5px; color: var(--text-muted); margin: 3px 0 0;">Scans official company ATS platforms and direct career pages every 6 hours.</p>
+                </div>
+                <button class="btn btn-primary btn-sm" id="btn-settings-trigger-scan" style="font-weight: 700;">⚡ Scan Portals Now</button>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; font-size: 12.5px; color: #334155;">
+                <div style="background: #fff; padding: 12px; border-radius: 8px; border: 1px solid var(--border-light);">
+                  <div style="font-weight: 700; color: #0f172a; margin-bottom: 4px;">✅ Active ATS Portals Covered</div>
+                  <div>Greenhouse, Lever, Oracle Cloud HCM, Workday, BambooHR, SmartRecruiters, Hirist</div>
+                </div>
+                <div style="background: #fff; padding: 12px; border-radius: 8px; border: 1px solid var(--border-light);">
+                  <div style="font-weight: 700; color: #0f172a; margin-bottom: 4px;">🛡️ Excluded Aggregators &amp; Spam</div>
+                  <div>Strict block against LinkedIn, Naukri, Shine, Adzuna, and generic scrapers</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 2: Candidate Specifications -->
+            <div style="background: #f8fafc; border: 1px solid var(--border-light); border-radius: 10px; padding: 18px;">
+              <h4 style="font-size: 15px; font-weight: 800; color: #0f172a; margin: 0 0 12px;">👤 Candidate Profile &amp; Preferences</h4>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                <div>
+                  <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">CANDIDATE NAME</label>
+                  <input type="text" readonly value="Vijay Kumar" style="width: 100%; padding: 8px 12px; font-size: 13px; background: #fff; border: 1px solid var(--border-light); border-radius: 6px; font-weight: 700;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">PRIMARY CONTACT EMAIL</label>
+                  <input type="text" readonly value="vijaychuhan007@gmail.com" style="width: 100%; padding: 8px 12px; font-size: 13px; background: #fff; border: 1px solid var(--border-light); border-radius: 6px; font-weight: 700;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">DIRECT PHONE</label>
+                  <input type="text" readonly value="+91 7696122634" style="width: 100%; padding: 8px 12px; font-size: 13px; background: #fff; border: 1px solid var(--border-light); border-radius: 6px; font-weight: 700;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">NOTICE PERIOD</label>
+                  <input type="text" readonly value="15 Days (Immediate Joining)" style="width: 100%; padding: 8px 12px; font-size: 13px; background: #fff; border: 1px solid var(--border-light); border-radius: 6px; font-weight: 700;">
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 3: Data Storage & System Status -->
+            <div style="background: #f8fafc; border: 1px solid var(--border-light); border-radius: 10px; padding: 18px;">
+              <h4 style="font-size: 15px; font-weight: 800; color: #0f172a; margin: 0 0 12px;">💾 Storage &amp; Application Engine</h4>
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 12.5px; color: #475569;">
+                <div>
+                  <div>📁 <strong>CSV Tracker:</strong> <code>job_search_tracker.csv</code> (110 active positions)</div>
+                  <div style="margin-top: 4px;">📄 <strong>PDF Engine:</strong> Chrome Headless Local PDF Compiler</div>
+                </div>
+                <button class="btn btn-outline btn-sm" id="btn-settings-refresh-all" style="font-weight: 700;">🔄 Refresh Pipeline Data</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Global App Footer -->
+      <footer class="app-footer">
+        <div class="footer-secure">
+          <span style="color:#10b981;">🛡️</span> Your data is secure and private • Local-first approach
+        </div>
+        <div class="footer-encourage">
+          🏆 Keep going! You're one step closer to your dream job!
+        </div>
+      </footer>
+
+      <!-- Sticky Bottom Comparison Dock (PolicyBazaar Style) -->
+      <div id="comparison-dock" class="comparison-dock" style="display:none;">
+        <div class="dock-content">
+          <div class="dock-info">
+            <span class="dock-icon">⚖️</span>
+            <div>
+              <strong id="dock-count-text">0 Roles Selected</strong>
+              <span class="dock-sub">Ready for side-by-side PolicyBazaar comparison</span>
+            </div>
+          </div>
+          <div class="dock-actions">
+            <button class="btn btn-primary" id="btn-dock-compare" style="font-weight:700; background: var(--primary-gradient);">
+              ⚖️ Compare Now (<span id="dock-btn-count">0</span>)
+            </button>
+            <button class="btn btn-outline" id="btn-dock-clear" style="color:#fff; background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.2);">Clear</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Document Viewer / Editor Modal with Instant PDF Engine -->
+  <div id="doc-modal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 960px; width: 94%; max-height: 94vh; display: flex; flex-direction: column;">
+      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); padding: 14px 20px;">
+        <h3 id="modal-title" style="margin: 0; font-size: 16px; font-weight:800; color: var(--text-main);">Tailored Application Document</h3>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <a id="btn-download-pdf-modal" class="btn btn-primary btn-sm" href="#" download style="text-decoration:none; display: inline-flex; align-items: center; gap: 4px;">📥 Download PDF</a>
+          <a id="btn-open-pdf-modal" class="btn btn-outline btn-sm" href="#" target="_blank" style="text-decoration:none;">👁️ Fullscreen ↗</a>
+          <button class="btn btn-outline btn-sm" id="btn-toggle-latex" style="font-size: 11px;">{ } LaTeX</button>
+          <button class="modal-close" id="modal-close-btn">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body" style="flex: 1; padding: 12px 20px; overflow: hidden; display: flex; flex-direction: column;">
+        <div id="modal-pdf-container" style="flex: 1; height: 72vh; border-radius: 8px; overflow: hidden; background: #1e293b; border: 1px solid var(--border-light); display: flex;">
+          <iframe id="modal-pdf-frame" style="width: 100%; height: 100%; border: none; background: #fff;" src=""></iframe>
+        </div>
+        <div id="modal-latex-container" style="display: none; flex: 1; height: 72vh;">
+          <textarea id="modal-doc-text" readonly spellcheck="false" style="width: 100%; height: 100%; font-family: 'JetBrains Mono', monospace; font-size: 12px; background: #0f172a; color: #cbd5e1; border: 1px solid #334155; border-radius: 6px; padding: 14px; box-sizing: border-box;"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-light); padding: 12px 20px;">
+        <div style="font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+          <span>⚡</span> <span><strong>Ready-to-Use PDF:</strong> Styled &amp; ATS-parsed. Zero manual compiling required.</span>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-outline" id="btn-copy-doc" style="display: none;">📋 Copy Code</button>
+          <button class="btn btn-primary" id="btn-close-modal">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Job Modal -->
+  <div id="add-modal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 480px; width: 90%;">
+      <div class="modal-header">
+        <h3 style="font-size:16px; font-weight:800;">Add New Opportunity</h3>
+        <button class="modal-close" id="add-modal-close">&times;</button>
+      </div>
+      <form id="add-job-form" style="padding: 20px;">
+        <div style="margin-bottom:12px;">
+          <label style="display:block; font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Company Name *</label>
+          <input type="text" id="add-company" required placeholder="e.g. Willware Technologies, Quest Global, Safetrust" style="width:100%; padding:8px 12px; border:1px solid var(--border-light); border-radius:6px; font-size:13px; outline:none;">
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="display:block; font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Job Title *</label>
+          <input type="text" id="add-role" required placeholder="e.g. Senior QA Engineer / SDET" style="width:100%; padding:8px 12px; border:1px solid var(--border-light); border-radius:6px; font-size:13px; outline:none;">
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="display:block; font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Career Page or Job URL</label>
+          <input type="url" id="add-url" placeholder="https://..." style="width:100%; padding:8px 12px; border:1px solid var(--border-light); border-radius:6px; font-size:13px; outline:none;">
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="display:block; font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Estimated Fit Score (0-100)</label>
+          <input type="number" id="add-fit" value="88" min="0" max="100" style="width:100%; padding:8px 12px; border:1px solid var(--border-light); border-radius:6px; font-size:13px; outline:none;">
+        </div>
+        <div style="margin-bottom:16px;">
+          <label style="display:block; font-size:12px; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Key Requirements / Notes</label>
+          <input type="text" id="add-notes" placeholder="e.g. Playwright, TypeScript, Remote" style="width:100%; padding:8px 12px; border:1px solid var(--border-light); border-radius:6px; font-size:13px; outline:none;">
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:8px;">
+          <button type="button" class="btn btn-outline" id="add-modal-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save to Pipeline</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Fast-Track 50-Job Auto-Apply Assistant Modal -->
+  <div id="fast-track-modal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 820px; width: 92%; max-height: 90vh; display: flex; flex-direction: column;">
+      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); padding: 14px 20px; background: linear-gradient(135deg, #f8fafc, #eff6ff);">
+        <div>
+          <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: #1e3a8a; display: flex; align-items: center; gap: 8px;">
+            <span>⚡</span> Fast-Track Application Assistant (50 Ready Jobs)
+          </h3>
+          <p style="margin: 3px 0 0 0; font-size: 12px; color: #3b82f6;">Knock out 50 tailored applications with 1-click Playwright autofill, live OTP verification, and instant status logging.</p>
+        </div>
+        <button class="modal-close" id="fast-track-close-btn">&times;</button>
+      </div>
+
+      <div class="modal-body" style="flex: 1; padding: 20px; overflow-y: auto;">
+        <!-- Queue Progress Bar -->
+        <div style="margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 6px;">
+            <span id="ft-progress-label">Queue: Job 1 of 50</span>
+            <span id="ft-progress-percent">0% Completed</span>
+          </div>
+          <div style="height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
+            <div id="ft-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #6366f1, #3b82f6); transition: width 0.3s ease;"></div>
+          </div>
+        </div>
+
+        <!-- Active Job Card -->
+        <div id="ft-active-card" style="background: #ffffff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 18px; box-shadow: 0 2px 8px rgba(59,130,246,0.08); margin-bottom: 16px;">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Live OTP Injection Box (if Oracle/Workday identity check is active) -->
+        <div id="ft-otp-box" style="display:none; background:#fef3c7; border:1px solid #fde68a; border-radius:8px; padding:14px; margin-bottom:16px;">
+          <div style="font-weight:800; font-size:12.5px; color:#92400e; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+            <span>🔐</span> Verification Code Detected:
+          </div>
+          <div style="font-size:12px; color:#78350f; line-height:1.5;">Enter the 6-digit confirmation code sent to <strong>vijaychuhan007@gmail.com</strong>:</div>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <input type="text" id="ft-input-code" placeholder="6-digit code e.g. 123456" maxlength="8" style="padding:8px 12px; border:2px solid #f59e0b; border-radius:6px; font-weight:700; font-size:13px; width:220px; outline:none; background:#fff;">
+            <button class="btn btn-primary btn-sm" id="ft-btn-submit-code" style="background:#d97706; border:none; font-weight:700; padding:8px 16px; cursor:pointer;">
+              ⚡ Send Code to Browser
+            </button>
+          </div>
+          <div id="ft-code-status" style="font-size:11.5px; margin-top:6px; color:#059669; font-weight:700; display:none;"></div>
+        </div>
+
+        <!-- 1-Click Form Answers Accordion -->
+        <details style="background: #f8fafc; border: 1px solid var(--border-light); border-radius: 8px; padding: 10px 14px; font-size: 12.5px;">
+          <summary style="font-weight: 700; color: #1e3a8a; cursor: pointer; user-select: none;">
+            📋 Instant 1-Click Form Answers (Copy Any Field in 1 Click)
+          </summary>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-top: 12px;" id="ft-quick-snippets">
+            <!-- Dynamically populated -->
+          </div>
+        </details>
+      </div>
+
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-light); padding: 14px 20px; background: #f8fafc;">
+        <button class="btn btn-outline" id="ft-btn-prev">⬅️ Previous Job</button>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-outline" id="ft-btn-skip">⏭️ Skip for Now</button>
+          <button class="btn btn-primary" id="ft-btn-mark-next" style="background: #10b981; border: none; font-weight: 800;">
+            ✅ Mark Applied &amp; Next Job ⏭️
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Active Auto-Fill Session Dock -->
+  <div id="floating-autofill-dock" style="display:none; position:fixed; bottom:20px; right:24px; z-index:9998; width:380px; max-width:92vw; background:#ffffff; border:2px solid #3b82f6; border-radius:12px; box-shadow:0 12px 35px rgba(0,0,0,0.22); padding:16px; font-size:12.5px; animation: slideUp 0.3s ease;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+      <strong style="color:#1d4ed8; font-size:13px; display:flex; align-items:center; gap:6px;">
+        <span>🖥️</span> Auto-Fill Session Active
+      </strong>
+      <button id="float-close-dock" style="background:none; border:none; color:#64748b; font-size:18px; cursor:pointer; line-height:1;">&times;</button>
+    </div>
+    <div id="float-job-title" style="font-weight:700; color:#0f172a; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+      Target Company &amp; Role
+    </div>
+    <div id="float-job-url" style="color:#3b82f6; font-size:11px; margin-bottom:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+      https://...
+    </div>
+
+    <!-- OTP Input in Floating Dock -->
+    <div id="float-otp-section" style="background:#fef3c7; border:1px solid #fde68a; border-radius:6px; padding:10px; margin-bottom:10px;">
+      <div style="font-weight:700; font-size:11.5px; color:#92400e; margin-bottom:4px;">🔐 Enter Verification Code (Email sent to vijaychuhan007@gmail.com):</div>
+      <div style="display:flex; gap:6px;">
+        <input type="text" id="float-input-code" placeholder="6-digit code" maxlength="8" style="flex:1; padding:6px 10px; border:1px solid #f59e0b; border-radius:4px; font-weight:700; font-size:12px; outline:none;">
+        <button id="float-btn-submit-code" style="background:#d97706; color:#fff; border:none; border-radius:4px; font-weight:700; font-size:11.5px; padding:6px 12px; cursor:pointer;">
+          Send Code
+        </button>
+      </div>
+      <div id="float-code-msg" style="font-size:11px; margin-top:4px; color:#059669; font-weight:700; display:none;"></div>
+    </div>
+
+    <!-- Quick Action Buttons -->
+    <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin-top:8px;">
+      <a id="float-link-portal" href="#" target="_blank" class="btn btn-outline btn-sm" style="font-size:11.5px; font-weight:700; padding:6px 10px; text-decoration:none;">
+        🏢 Open Tab ↗
+      </a>
+      <button id="float-btn-mark-applied" class="btn btn-primary btn-sm" style="background:#10b981; border:none; font-size:11.5px; font-weight:700; padding:6px 12px; cursor:pointer;">
+        ✅ Mark Applied
+      </button>
+      <button id="float-btn-stop" class="btn btn-outline btn-sm" style="color:#dc2626; border-color:#fca5a5; font-size:11.5px; font-weight:700; padding:6px 10px; margin-left:auto; cursor:pointer;">
+        ⏹️ Stop
+      </button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

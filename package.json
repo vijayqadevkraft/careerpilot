@@ -1,0 +1,19 @@
+{
+  "name": "careerpilot-ai",
+  "version": "1.0.0",
+  "description": "CareerPilot AI - Autonomous Job Search Dashboard & Career Assistant",
+  "type": "module",
+  "main": "web/server.js",
+  "scripts": {
+    "start": "node web/server.js",
+    "autopilot": "node tools/autopilot.js",
+    "migrate:mongo": "node tools/migrate_to_mongo.js",
+    "test": "node --check web/server.js && node --check web/ai-toolkit.js && node --check tools/db.js"
+  },
+  "dependencies": {
+    "mongodb": "^6.10.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

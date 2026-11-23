@@ -1,0 +1,152 @@
+%% Example CV - Vijay Kumar
+%% Comprehensive overview of all competencies, experience, and achievements.
+%% Use as a master reference when tailoring role-specific CVs.
+%%
+%% Compile with: lualatex main_example.tex
+
+\documentclass[11pt,a4paper,sans]{moderncv}
+\moderncvstyle{banking}
+\moderncvcolor{blue}
+
+% Force the name and section headings to render in moderncv blue (color1).
+\renewcommand*{\namefont}{\fontsize{32}{34}\bfseries\upshape}
+\colorlet{firstnamecolor}{color1}
+\colorlet{lastnamecolor}{color1}
+\colorlet{namecolor}{color1}
+\renewcommand*{\sectionstyle}[1]{{\sectionfont\color{color1}#1}}
+
+\usepackage[utf8]{inputenc}
+\ifpdftex\usepackage[T1]{fontenc}\fi
+\AtEndPreamble{\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=blue,
+    pdftitle={Vijay Kumar - CV},
+    pdfpagemode=UseNone,
+}}
+\usepackage[scale=0.82]{geometry}
+\usepackage{import}
+\usepackage{needspace}
+
+% personal data
+\name{Vijay}{Kumar}
+\address{India}{}{}
+\phone[mobile]{+91 7696122634}
+\email{vijaychuhan007@gmail.com}
+\extrainfo{\href{https://linkedin.com/in/vijay-007}{linkedin.com/in/vijay-007} \,|\, \href{https://github.com/vijayqadevkraft}{github.com/vijayqadevkraft}}
+
+\begin{document}
+
+\makecvtitle
+
+% ============================================================
+%     PROFILE STATEMENT
+% ============================================================
+
+\vspace{4pt}
+\small{Senior QA Engineer with 5 years of quality assurance experience, specializing in test automation using Playwright, JavaScript, and TypeScript, and leading a team of 5 QA technicians. Designed and implemented scalable end-to-end automation frameworks that cut test execution time by 60\%, integrated automated quality gates into CI/CD pipelines, and maintained robust web and Android test suites. Proven track record managing manual functional, regression, and UAT cycles, collaborating with cross-functional development teams, and mentoring junior engineers to achieve zero-defect releases.}
+
+% ============================================================
+%     CORE COMPETENCIES
+% ============================================================
+
+\section{Core Competencies}
+\vspace{1pt}
+\begin{itemize}
+\item \textbf{Technical \& Test Automation}: Playwright, JavaScript, TypeScript, Java Selenium WebDriver, Web \& Mobile Test Automation, Prompt Engineering in Software Testing, API Testing (Postman), BrowserStack.
+\item \textbf{Testing \& QA Processes}: Manual Testing, Functional \& Regression Testing, Test Case Design \& Execution, Test Strategy Development, User Acceptance Testing (UAT), CI/CD Integration.
+\item \textbf{Defect Tracking \& Collaboration}: JIRA, ClickUp, Redmine, Defect Lifecycle Management, Root Cause Analysis, Agile / Scrum Methodology.
+\item \textbf{Leadership \& Soft Skills}: QA Team Leadership (5 technicians), Mentoring, Cross-Functional Collaboration, Attention to Detail, Problem-Solving.
+\end{itemize}
+
+% ============================================================
+%     PROFESSIONAL EXPERIENCE
+% ============================================================
+
+\section{Professional Experience}
+\vspace{3pt}
+\begin{itemize}
+
+% --- Most Recent Role ---
+\needspace{5\baselineskip}
+\item{\cventry{Nov 2024 -- Nov 2025}{Software Tester}{XianInfotech LLP}{India}{}{\vspace{1pt}
+\begin{itemize}
+    \item Developed and executed comprehensive test plans, test cases, and test scripts for assigned software projects across web and mobile platforms.
+    \item Identified, documented, and reported bugs to the development team, and meticulously verified bug fixes to ensure quality standards were met prior to deployment.
+    \item Prepared detailed test reports, defect logs, and thorough documentation for all assigned testing tasks, accelerating sprint turnaround.
+    \item Collaborated closely with developers and project managers to analyze requirements, participate in sprint ceremonies, and support overall testing lifecycle.
+\end{itemize}}}
+
+\vspace{3pt}
+
+% --- Previous Role ---
+\needspace{5\baselineskip}
+\item{\cventry{May 2021 -- May 2024}{Senior QA Engineer}{Devkraft Technologies}{India}{}{\vspace{1pt}
+\begin{itemize}
+    \item Implemented a Playwright-based automation framework using JavaScript/TypeScript and successfully integrated it into the CI/CD pipeline, reducing overall test execution time by 60\%.
+    \item Led a team of 5 QA Technicians, significantly improving team efficiency, cross-departmental collaboration, and sprint output quality.
+    \item Developed and executed robust test strategies for Android and web applications, encompassing manual, functional, end-to-end, and regression testing across multiple devices.
+    \item Enhanced the quality assurance process by identifying and reporting defects via JIRA, streamlining critical feedback loops with development teams.
+    \item Analyzed User Requirements, Functional Specifications, and Technical Requirement Documents to prepare comprehensive Test Plans.
+    \item Coordinated user acceptance training (UAT) and testing with business analysts, field users, and the on-site coordinator to ensure software reliability before release.
+\end{itemize}}}
+
+\vspace{3pt}
+
+% --- Earlier Role ---
+\needspace{5\baselineskip}
+\item{\cventry{Jul 2020 -- Dec 2020}{QA Trainee}{Xornor Software Technologies}{India}{}{\vspace{1pt}
+\begin{itemize}
+    \item Executed assigned QA responsibilities with a focus on learning software testing fundamentals and test case execution in a professional Agile environment.
+    \item Demonstrated efficiency, sincerity, and reliability while fulfilling all training period obligations and testing assignments.
+\end{itemize}}}
+
+\end{itemize}
+
+% ============================================================
+%     KEY PROJECTS
+% ============================================================
+
+\section{Featured Projects}
+\vspace{1pt}
+\begin{itemize}
+\item \textbf{Playwright Automation Demo} (\href{https://github.com/vijayqadevkraft/playwright-demo}{github.com/vijayqadevkraft/playwright-demo}): Production-grade test automation framework built with TypeScript and Playwright, utilizing Page Object Model (POM), parallel execution, and CI/CD workflow integration.
+\item \textbf{HDFC Life Insurance}: Ensured highest quality and compliance of insurance customer and agent software platforms prior to release by conducting rigorous testing cycles.
+\item \textbf{TVS Motor Mobile App}: Tested application functionality for end-to-end sales and service-related queries, customer requests, and complaints across diverse Android device profiles.
+\item \textbf{Tangibl}: Verified core features, audio streams, and interactive user flows of an application designed for users to practice and improve communication and listening skills.
+\end{itemize}
+
+% ============================================================
+%     EDUCATION
+% ============================================================
+
+\section{Education}
+\vspace{1pt}
+\begin{itemize}
+\item{\cventry{}{B.Tech in Computer Science Engineering}{CT Group of Institutions}{India}{}{\vspace{1pt}
+Core Coursework: Software Engineering, Testing \& QA Methodologies, Data Structures \& Algorithms, Object-Oriented Programming.
+}}
+\end{itemize}
+
+% ============================================================
+%     LANGUAGES
+% ============================================================
+
+\section{Languages}
+\vspace{1pt}
+\begin{itemize}
+\item English (Professional working proficiency), Hindi (Native), Punjabi (Native / Conversational).
+\end{itemize}
+
+% ============================================================
+%     REFERENCES
+% ============================================================
+
+\section{References}
+\vspace{1pt}
+\begin{itemize}
+\item Available upon request.
+\end{itemize}
+
+\end{document}

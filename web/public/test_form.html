@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sample Job Application Form — CareerPilot AutoFill Verification</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0b0f19; color: #f8fafc; padding: 40px 20px; display: flex; justify-content: center; }
+    .container { width: 100%; max-width: 620px; }
+    .header-card {
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      border: 1px solid #38bdf8;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(56, 189, 248, 0.15);
+      text-align: center;
+    }
+    .header-card h1 { font-size: 20px; color: #38bdf8; margin-bottom: 6px; }
+    .header-card p { font-size: 13px; color: #94a3b8; margin-bottom: 16px; }
+    .btn-autofill-main {
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      color: #fff;
+      border: none;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 12px 28px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-autofill-main:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.6);
+    }
+    .btn-clear {
+      background: transparent;
+      border: 1px solid #475569;
+      color: #94a3b8;
+      font-size: 13px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    .btn-clear:hover { background: #1e293b; color: #fff; }
+    .form-box { background: #131d31; border: 1px solid #233554; padding: 30px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+    h2 { margin-bottom: 20px; color: #f1f5f9; font-size: 18px; }
+    .field { margin-bottom: 16px; }
+    label { display: block; font-size: 13px; color: #94a3b8; margin-bottom: 6px; font-weight: 600; }
+    input[type="text"], input[type="email"], input[type="tel"] {
+      width: 100%; padding: 11px 14px; background: #0a0f1d; border: 1px solid #334155; border-radius: 6px; color: #fff; font-size: 14px; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus { border-color: #38bdf8; outline: none; }
+    .filled-highlight {
+      border-color: #10b981 !important;
+      background: rgba(16, 185, 129, 0.08) !important;
+      box-shadow: 0 0 0 1px #10b981;
+    }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .submit-btn { width: 100%; background: #22c55e; color: #000; font-weight: bold; border: none; padding: 14px; border-radius: 6px; font-size: 15px; cursor: pointer; margin-top: 10px; }
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #10b981;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      display: none;
+      animation: fadeIn 0.3s ease;
+      z-index: 9999;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+  <div class="toast" id="toast">✓ AutoFilled 11 fields with Vijay Kumar profile!</div>
+
+  <div class="container">
+    <div class="header-card">
+      <h1>⚡ AutoFill Verification Test Form</h1>
+      <p>Click the button below to test immediate form population in your browser:</p>
+      <div>
+        <button type="button" class="btn-autofill-main" id="btn-autofill">⚡ Auto-Fill With My Profile</button>
+        <button type="button" class="btn-clear" id="btn-clear">Reset Form</button>
+      </div>
+    </div>
+
+    <div class="form-box">
+      <h2>Role: Senior QA Automation Engineer (Playwright & TypeScript)</h2>
+      <form id="job-app-form">
+        <div class="grid">
+          <div class="field">
+            <label for="first_name">First Name *</label>
+            <input type="text" id="first_name" name="first_name" placeholder="First name">
+          </div>
+          <div class="field">
+            <label for="last_name">Last Name *</label>
+            <input type="text" id="last_name" name="last_name" placeholder="Last name">
+          </div>
+        </div>
+        <div class="field">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" name="email" placeholder="name@example.com">
+        </div>
+        <div class="field">
+          <label for="phone">Phone Number *</label>
+          <input type="tel" id="phone" name="phone" placeholder="+91...">
+        </div>
+        <div class="field">
+          <label for="linkedin">LinkedIn Profile URL</label>
+          <input type="text" id="linkedin" name="linkedin_profile" placeholder="https://linkedin.com/in/...">
+        </div>
+        <div class="field">
+          <label for="github">GitHub Profile / Portfolio URL</label>
+          <input type="text" id="github" name="github_url" placeholder="https://github.com/...">
+        </div>
+        <div class="grid">
+          <div class="field">
+            <label for="company">Current Company</label>
+            <input type="text" id="company" name="current_company" placeholder="Company name">
+          </div>
+          <div class="field">
+            <label for="title">Current Title</label>
+            <input type="text" id="title" name="current_title" placeholder="e.g. QA Engineer">
+          </div>
+        </div>
+        <div class="grid">
+          <div class="field">
+            <label for="experience">Total Years Experience</label>
+            <input type="text" id="experience" name="years_of_experience" placeholder="e.g. 5">
+          </div>
+          <div class="field">
+            <label for="notice">Notice Period</label>
+            <input type="text" id="notice" name="notice_period" placeholder="e.g. 15 days">
+          </div>
+        </div>
+        <div class="field">
+          <label for="location">Current Location</label>
+          <input type="text" id="location" name="location" placeholder="City, Country">
+        </div>
+        <div class="field">
+          <label for="resume">Attach Resume / CV</label>
+          <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx,.tex" style="color:#94a3b8; padding:8px 0;">
+        </div>
+        <button type="button" class="submit-btn" onclick="alert('Form ready for submission!')">Submit Application</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const PROFILE = {
+      first: "Vijay",
+      last: "Kumar",
+      full: "Vijay Kumar",
+      email: "vijaychuhan007@gmail.com",
+      phone: "+91 7696122634",
+      linkedin: "https://www.linkedin.com/in/vijay-007",
+      github: "https://github.com/vijayqadevkraft",
+      company: "XianInfotech LLP",
+      title: "Senior QA Engineer",
+      experience: "5 Years",
+      notice: "15 days",
+      location: "India (Open to Remote / Major Hubs)"
+    };
+
+    function autoFill() {
+      const mappings = [
+        { id: 'first_name', val: PROFILE.first },
+        { id: 'last_name', val: PROFILE.last },
+        { id: 'email', val: PROFILE.email },
+        { id: 'phone', val: PROFILE.phone },
+        { id: 'linkedin', val: PROFILE.linkedin },
+        { id: 'github', val: PROFILE.github },
+        { id: 'company', val: PROFILE.company },
+        { id: 'title', val: PROFILE.title },
+        { id: 'experience', val: PROFILE.experience },
+        { id: 'notice', val: PROFILE.notice },
+        { id: 'location', val: PROFILE.location }
+      ];
+
+      let count = 0;
+      mappings.forEach(m => {
+        const el = document.getElementById(m.id);
+        if (el) {
+          el.value = m.val;
+          el.classList.add('filled-highlight');
+          el.dispatchEvent(new Event('input', { bubbles: true }));
+          el.dispatchEvent(new Event('change', { bubbles: true }));
+          count++;
+        }
+      });
+
+      const toast = document.getElementById('toast');
+      toast.innerText = `⚡ AutoFilled ${count} fields with Vijay Kumar's profile!`;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3500);
+    }
+
+    function clearForm() {
+      document.querySelectorAll('#job-app-form input[type="text"], #job-app-form input[type="email"], #job-app-form input[type="tel"]').forEach(input => {
+        input.value = '';
+        input.classList.remove('filled-highlight');
+      });
+    }
+
+    document.getElementById('btn-autofill').addEventListener('click', autoFill);
+    document.getElementById('btn-clear').addEventListener('click', clearForm);
+  </script>
+</body>
+</html>

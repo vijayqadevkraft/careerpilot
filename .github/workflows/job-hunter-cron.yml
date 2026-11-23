@@ -1,0 +1,42 @@
+name: CareerPilot 24/7 Autonomous Job Hunter
+
+on:
+  schedule:
+    # Runs twice every day at 02:00 UTC and 14:00 UTC (7:30 AM & 7:30 PM IST)
+    - cron: '0 2,14 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions UI anytime
+
+permissions:
+  contents: read
+
+jobs:
+  hunt:
+    name: Autonomous Job Scraper & Scorer
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Autopilot Job Hunter
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        run: |
+          echo "=========================================================="
+          echo " Starting Autonomous Job Scrape & Senior QA Fit Matching"
+          echo "=========================================================="
+          node tools/autopilot.js
+
+      - name: Job Hunt Status Report
+        run: |
+          echo "Job hunt run completed successfully. Fresh jobs synchronized with MongoDB Atlas." >> $GITHUB_STEP_SUMMARY

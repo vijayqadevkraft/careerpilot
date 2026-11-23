@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CareerPilot Mini — Compact AI Job Command</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --bg-card: #111827;
+      --bg-card-hover: #1e293b;
+      --border: rgba(255, 255, 255, 0.08);
+      --primary: #38bdf8;
+      --primary-gradient: linear-gradient(135deg, #38bdf8, #6366f1);
+      --purple-gradient: linear-gradient(135deg, #8b5cf6, #6366f1);
+      --green: #10b981;
+      --green-light: rgba(16, 185, 129, 0.15);
+      --purple: #a855f7;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      background-image: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 60%);
+    }
+
+    .mini-shell {
+      width: 100%;
+      max-width: 520px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 74px;
+      position: relative;
+    }
+
+    /* Top App Bar */
+    .mini-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(9, 13, 22, 0.88);
+      backdrop-filter: blur(14px);
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mini-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--primary-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.35);
+    }
+
+    .brand-text h1 {
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-text span {
+      font-size: 10px;
+      color: var(--primary);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-full-switch {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: #e2e8f0;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 20px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+    .btn-full-switch:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+
+    /* Candidate Mini Bar */
+    .candidate-strip {
+      padding: 10px 18px;
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.08), rgba(139, 92, 246, 0.08));
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+    }
+
+    .cand-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+    }
+
+    .cand-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+    }
+
+    .auto-timer-badge {
+      font-size: 10.5px;
+      color: var(--text-muted);
+      background: rgba(15, 23, 42, 0.8);
+      padding: 2px 8px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    /* KPI Grid */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 14px 18px;
+    }
+
+    .kpi-tile {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .kpi-tile .kpi-num {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .kpi-tile .kpi-label {
+      font-size: 9.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    /* Master Action Buttons */
+    .master-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 0 18px 12px;
+    }
+
+    .action-btn-pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      transition: all 0.15s ease;
+    }
+
+    .action-btn-pill:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .action-btn-pill.primary {
+      background: var(--primary-gradient);
+      border: none;
+      color: #fff;
+      grid-column: span 2;
+      box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);
+    }
+
+    .action-btn-pill.purple {
+      background: rgba(139, 92, 246, 0.12);
+      border-color: rgba(139, 92, 246, 0.3);
+      color: #c084fc;
+    }
+
+    .action-btn-pill.blue {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.3);
+      color: #7dd3fc;
+    }
+
+    /* Search & Filter Section */
+    .filter-section {
+      padding: 0 18px 10px;
+    }
+
+    .mini-search-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .mini-search-box input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 12.5px;
+      outline: none;
+      width: 100%;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .filter-tabs::-webkit-scrollbar { display: none; }
+
+    .filter-pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .filter-pill.active {
+      background: var(--primary);
+      color: #0b0f19;
+      border-color: var(--primary);
+      font-weight: 800;
+    }
+
+    /* Feed List of Compact Job Cards */
+    .jobs-feed {
+      padding: 6px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .feed-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: transform 0.12s ease, border-color 0.12s ease;
+    }
+
+    .feed-card:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      background: var(--bg-card-hover);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .card-company-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .card-company-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .card-role-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.25;
+    }
+
+    .fit-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 8px;
+      background: var(--green-light);
+      color: var(--green);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      flex-shrink: 0;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 2px;
+    }
+
+    .tag-chip {
+      font-size: 9.5px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+    }
+
+    .card-actions-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .btn-card {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 11px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-apply {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .btn-cv {
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--primary);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+
+    .btn-cl {
+      background: rgba(168, 85, 247, 0.12);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.25);
+    }
+
+    /* Fixed Bottom Navigation Bar */
+    .mini-bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 520px;
+      background: rgba(9, 13, 22, 0.94);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 8px 12px;
+      z-index: 60;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: var(--text-dim);
+      font-size: 10px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-item .nav-icon {
+      font-size: 16px;
+    }
+
+    /* Toast Notification */
+    #mini-toast {
+      position: fixed;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: #1e293b;
+      color: #fff;
+      border: 1px solid var(--primary);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    #mini-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* PDF Viewer Modal */
+    .mini-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 12px;
+    }
+    .mini-modal-backdrop.open { display: flex; }
+
+    .mini-modal-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 480px;
+      height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+
+    .mini-modal-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mini-modal-header h3 {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #fff;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 280px;
+    }
+
+    .mini-modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .mini-modal-frame {
+      flex: 1;
+      width: 100%;
+      border: none;
+      background: #fff;
+    }
+
+    /* Mini AI Modal Styles */
+    .mini-ai-subnav {
+      display: flex;
+      gap: 6px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .mini-ai-tab-btn {
+      padding: 6px 12px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .mini-ai-tab-btn.active {
+      background: var(--primary-gradient);
+      color: #0b0f19;
+      border-color: transparent;
+    }
+    .mini-ai-body {
+      flex: 1;
+      padding: 14px;
+      overflow-y: auto;
+      color: #e2e8f0;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="mini-shell">
+    <!-- Top App Bar -->
+    <header class="mini-header">
+      <div class="mini-brand">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-text">
+          <h1>CareerPilot Mini</h1>
+          <span>AI Companion App</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-full-switch" onclick="openAiToolsModal()" style="background:var(--primary-gradient); color:#0b0f19; font-weight:800; border:none; cursor:pointer;">
+          <span>✨</span> AI Tools
+        </button>
+        <a href="/" class="btn-full-switch" title="Open Desktop Full Dashboard">
+          <span>🖥️</span> Full App ↗
+        </a>
+      </div>
+    </header>
+
+    <!-- Candidate Profile & Scheduler Status Strip -->
+    <div class="candidate-strip">
+      <div class="cand-name">
+        <span class="cand-dot" id="mini-dot"></span>
+        <span>Vijay Kumar • 5 Yrs Senior QA</span>
+      </div>
+      <div class="auto-timer-badge" id="mini-timer">Next scan in 5h</div>
+    </div>
+
+    <!-- KPI Metric Strip (4 Tiles) -->
+    <div class="kpi-strip">
+      <div class="kpi-tile">
+        <span class="kpi-num" id="kpi-total">106</span>
+        <span class="kpi-label">Tracked</span>
+      </div>
+      <div class="kpi-tile">
+        <span class="kpi-num" id="kpi-ready" style="color:var(--green);">72</span>
+        <span class="kpi-label">Ready</span>
+      </div>
+      <div class="kpi-tile">
+        <span class="kpi-num" id="kpi-top" style="color:var(--primary);">96%</span>
+        <span class="kpi-label">Top Fit</span>
+      </div>
+      <div class="kpi-tile">
+        <span class="kpi-num" id="kpi-interviews" style="color:var(--purple);">12</span>
+        <span class="kpi-label">Interviews</span>
+      </div>
+    </div>
+
+    <!-- Quick Master Actions -->
+    <div class="master-actions">
+      <button class="action-btn-pill primary" id="btn-mini-scan">
+        <span>⚡</span> Scan &amp; Scrape New Jobs Now
+      </button>
+      <a href="/api/pdf?file=cv/Vijay_Kumar_Senior_QA_CV.pdf&download=1" class="action-btn-pill blue" download>
+        <span>📄</span> Master CV (PDF)
+      </a>
+      <a href="/api/pdf?file=cover_letters/Vijay_Kumar_Cover_Letter.pdf&download=1" class="action-btn-pill purple" download>
+        <span>✉️</span> Master Cover Letter
+      </a>
+    </div>
+
+    <!-- Search & Filters -->
+    <div class="filter-section">
+      <div class="mini-search-box">
+        <span>🔍</span>
+        <input type="text" id="mini-search" placeholder="Quick filter by company or skill...">
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-pill active" data-filter="all">All Roles (<span id="count-all">0</span>)</button>
+        <button class="filter-pill" data-filter="top">🔥 Top Tier (90%+)</button>
+        <button class="filter-pill" data-filter="ready">⚡ Ready to Apply</button>
+        <button class="filter-pill" data-filter="remote">🌐 Remote / Hybrid</button>
+      </div>
+    </div>
+
+    <!-- Jobs Feed Container -->
+    <div class="jobs-feed" id="mini-jobs-feed">
+      <div style="text-align:center; padding:30px; color:var(--text-dim); font-size:12px;">Loading live opportunities...</div>
+    </div>
+
+    <!-- Fixed Bottom Navigation Bar -->
+    <nav class="mini-bottom-nav">
+      <button class="nav-item active" onclick="setFilter('all')">
+        <span class="nav-icon">⚡</span>
+        <span>Feed</span>
+      </button>
+      <button class="nav-item" onclick="openAiToolsModal()">
+        <span class="nav-icon">✨</span>
+        <span>AI Tools</span>
+      </button>
+      <button class="nav-item" onclick="openDocModal('cv/Vijay_Kumar_Senior_QA_CV.pdf', 'Vijay Kumar - Master CV')">
+        <span class="nav-icon">📄</span>
+        <span>My CV</span>
+      </button>
+      <button class="nav-item" onclick="openDocModal('cover_letters/Vijay_Kumar_Cover_Letter.pdf', 'Vijay Kumar - Master Cover Letter')">
+        <span class="nav-icon">✉️</span>
+        <span>Cover Letter</span>
+      </button>
+      <a href="/?tab=compare" class="nav-item">
+        <span class="nav-icon">⚖️</span>
+        <span>Compare</span>
+      </a>
+      <a href="/" class="nav-item">
+        <span class="nav-icon">🖥️</span>
+        <span>Full App</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- Toast Element -->
+  <div id="mini-toast">Message</div>
+
+  <!-- PDF Viewer Modal -->
+  <div id="mini-pdf-modal" class="mini-modal-backdrop">
+    <div class="mini-modal-box">
+      <div class="mini-modal-header">
+        <h3 id="modal-heading">Document Preview</h3>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <a id="modal-download-link" href="#" class="btn-full-switch" download style="background:var(--primary); color:#0b0f19; font-weight:800;">📥 PDF</a>
+          <button class="mini-modal-close" onclick="closeDocModal()">&times;</button>
+        </div>
+      </div>
+      <iframe id="modal-pdf-iframe" class="mini-modal-frame" src=""></iframe>
+    </div>
+  </div>
+
+  <!-- Mini AI Tools Modal (AIApply Suite) -->
+  <div id="mini-ai-modal" class="mini-modal-backdrop">
+    <div class="mini-modal-box" style="height:86vh; max-height:680px;">
+      <div class="mini-modal-header">
+        <h3 style="display:flex; align-items:center; gap:6px;">
+          <span>✨</span> AI Career Command
+        </h3>
+        <button class="mini-modal-close" onclick="closeAiToolsModal()">&times;</button>
+      </div>
+
+      <div class="mini-ai-subnav">
+        <button class="mini-ai-tab-btn active" data-tab="ats" onclick="switchMiniAiTab('ats')">🎯 ATS Match</button>
+        <button class="mini-ai-tab-btn" data-tab="interview" onclick="switchMiniAiTab('interview')">🎙️ STAR Coach</button>
+        <button class="mini-ai-tab-btn" data-tab="outreach" onclick="switchMiniAiTab('outreach')">💬 Outreach</button>
+        <button class="mini-ai-tab-btn" data-tab="copy" onclick="switchMiniAiTab('copy')">📋 Fast Copy</button>
+      </div>
+
+      <div class="mini-ai-body">
+        <!-- 1. ATS Scan Tab -->
+        <div id="mini-panel-ats">
+          <div style="margin-bottom:10px;">
+            <label style="font-size:11px; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Paste Job Description or Requirements</label>
+            <textarea id="mini-ats-jd" rows="5" placeholder="Paste role requirements here..." style="width:100%; padding:8px 10px; border-radius:8px; border:1px solid var(--border); background:#1e293b; color:#fff; font-size:12px; outline:none; font-family:inherit;"></textarea>
+          </div>
+          <button class="btn-full-switch" onclick="runMiniAtsScan()" style="width:100%; justify-content:center; background:var(--primary-gradient); color:#0b0f19; font-weight:800; padding:10px; border:none; margin-bottom:14px; cursor:pointer;">
+            ⚡ Analyze ATS Fit
+          </button>
+
+          <div id="mini-ats-results" style="display:none; background:#111827; border:1px solid var(--border); border-radius:10px; padding:14px;">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+              <div style="width:52px; height:52px; border-radius:50%; background:linear-gradient(135deg, #10b981, #059669); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; color:#fff;" id="mini-ats-score">
+                96%
+              </div>
+              <div>
+                <strong style="font-size:13px; color:#fff;" id="mini-ats-verdict">Strong ATS Fit</strong>
+                <div style="font-size:11px; color:var(--text-muted);">High match with Vijay's 5-yr QA Lead profile</div>
+              </div>
+            </div>
+            <div style="font-size:11px; font-weight:700; color:#10b981; margin-bottom:4px;">MATCHED KEYWORDS:</div>
+            <div id="mini-ats-matched" style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:10px;"></div>
+            <div style="font-size:11px; font-weight:700; color:#f59e0b; margin-bottom:4px;">MISSING / GAPS:</div>
+            <div id="mini-ats-missing" style="display:flex; flex-wrap:wrap; gap:4px;"></div>
+          </div>
+        </div>
+
+        <!-- 2. STAR Interview Coach Tab -->
+        <div id="mini-panel-interview" style="display:none;">
+          <div style="font-size:11.5px; color:var(--text-muted); margin-bottom:10px;">
+            Tap any question to reveal structured STAR answer from Vijay's track record:
+          </div>
+          <div id="mini-interview-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+        </div>
+
+        <!-- 3. Outreach Generator Tab -->
+        <div id="mini-panel-outreach" style="display:none;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
+            <div>
+              <label style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:2px;">Company</label>
+              <input type="text" id="mini-outreach-comp" value="Amazon" style="width:100%; padding:6px 10px; border-radius:6px; border:1px solid var(--border); background:#1e293b; color:#fff; font-size:12px; outline:none;">
+            </div>
+            <div>
+              <label style="font-size:11px; color:var(--text-muted); display:block; margin-bottom:2px;">Recipient</label>
+              <input type="text" id="mini-outreach-rec" value="Hiring Manager" style="width:100%; padding:6px 10px; border-radius:6px; border:1px solid var(--border); background:#1e293b; color:#fff; font-size:12px; outline:none;">
+            </div>
+          </div>
+          <button class="btn-full-switch" onclick="generateMiniOutreach()" style="width:100%; justify-content:center; background:var(--primary-gradient); color:#0b0f19; font-weight:800; padding:8px; border:none; margin-bottom:10px; cursor:pointer;">
+            ✨ Generate Pitch
+          </button>
+          <div style="margin-bottom:8px;">
+            <div style="font-size:11px; color:var(--text-muted); margin-bottom:2px;">Subject:</div>
+            <input type="text" id="mini-outreach-subj" readonly style="width:100%; padding:6px 10px; border-radius:6px; border:1px solid var(--border); background:#111827; color:#38bdf8; font-size:11.5px; font-weight:700;">
+          </div>
+          <div style="margin-bottom:8px;">
+            <div style="font-size:11px; color:var(--text-muted); margin-bottom:2px;">Body:</div>
+            <textarea id="mini-outreach-body" rows="6" readonly style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--border); background:#111827; color:#cbd5e1; font-size:11.5px; line-height:1.5; outline:none; resize:none;"></textarea>
+          </div>
+          <button class="btn-full-switch" onclick="copyMiniField(document.getElementById('mini-outreach-body').value, 'Outreach Message')" style="width:100%; justify-content:center; background:rgba(255,255,255,0.08); color:#fff; font-weight:700; padding:8px; border:1px solid var(--border);">
+            📋 Copy Message to Clipboard
+          </button>
+        </div>
+
+        <!-- 4. Fast Profile Copy Tab -->
+        <div id="mini-panel-copy" style="display:none;">
+          <div style="font-size:11.5px; color:var(--text-muted); margin-bottom:10px;">
+            1-Click tap to copy candidate fields for mobile application portals:
+          </div>
+          <div id="mini-quick-copy-list" style="display:flex; flex-direction:column; gap:6px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let miniJobs = [];
+    let currentFilter = 'all';
+
+    function showToast(msg) {
+      const t = document.getElementById('mini-toast');
+      t.innerText = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    async function loadMiniData() {
+      try {
+        const res = await fetch('/api/jobs');
+        const data = await res.json();
+        if (data.success) {
+          miniJobs = data.jobs;
+          renderMiniKPIs();
+          renderFeed();
+        }
+      } catch (e) {
+        console.error('Failed to load jobs:', e);
+      }
+    }
+
+    async function loadSchedulerStatus() {
+      try {
+        const res = await fetch('/api/scheduler/status');
+        const d = await res.json();
+        if (d.success) {
+          const dot = document.getElementById('mini-dot');
+          const timer = document.getElementById('mini-timer');
+          if (dot) {
+            dot.style.background = d.status === 'running' ? '#38bdf8' : (d.active ? '#10b981' : '#f59e0b');
+          }
+          if (timer && d.nextRun) {
+            const diffMin = Math.round((new Date(d.nextRun).getTime() - Date.now()) / (1000 * 60));
+            if (diffMin > 0) {
+              const h = Math.floor(diffMin / 60);
+              const m = diffMin % 60;
+              timer.innerText = `Next scan in ${h > 0 ? h + 'h ' : ''}${m}m`;
+            } else {
+              timer.innerText = 'Scanning...';
+            }
+          }
+        }
+      } catch (e) {}
+    }
+
+    function renderMiniKPIs() {
+      const total = miniJobs.length;
+      const ready = miniJobs.filter(j => j.status === 'drafted').length;
+      document.getElementById('kpi-total').innerText = total;
+      document.getElementById('count-all').innerText = total;
+      document.getElementById('kpi-ready').innerText = ready;
+
+      const maxFit = Math.max(...miniJobs.map(j => parseInt(j.fit_rating || '0') || 0), 0);
+      document.getElementById('kpi-top').innerText = `${maxFit || 96}%`;
+    }
+
+    function renderFeed() {
+      const feed = document.getElementById('mini-jobs-feed');
+      feed.innerHTML = '';
+
+      const query = (document.getElementById('mini-search').value || '').toLowerCase();
+
+      const filtered = miniJobs.filter(j => {
+        const text = `${j.company} ${j.role} ${j.notes}`.toLowerCase();
+        const matchesQuery = text.includes(query);
+        if (!matchesQuery) return false;
+
+        const fit = parseInt(j.fit_rating || '85', 10);
+        if (currentFilter === 'top') return fit >= 90;
+        if (currentFilter === 'ready') return j.status === 'drafted';
+        if (currentFilter === 'remote') return text.includes('remote') || (j.role_type || '').toLowerCase().includes('remote');
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        feed.innerHTML = `
+          <div style="text-align:center; padding:30px 10px; color:var(--text-muted); font-size:13px;">
+            No roles match this filter. Try another tab or query.
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(job => {
+        const fit = parseInt(job.fit_rating || '85', 10);
+        const card = document.createElement('div');
+        card.className = 'feed-card';
+
+        const fallbackUrl = `https://www.google.com/search?q=${encodeURIComponent(job.company + ' ' + job.role + ' careers')}&ibp=htl;jobs`;
+        const portalUrl = job.source || fallbackUrl;
+
+        card.innerHTML = `
+          <div class="card-top">
+            <div class="card-company-title">
+              <span class="card-company-name">${escapeHtml(job.company)} • ${escapeHtml(job.sector || 'Tech')}</span>
+              <div class="card-role-name">${escapeHtml(job.role)}</div>
+              <div style="font-size:10px; color:var(--text-muted); margin-top:3px; display:flex; gap:8px;">
+                <span>📥 Scraped: ${(job.date || '').slice(0, 10)}</span>
+                <span>🗓️ Listed: ${(job.posted_date || job.date || '').slice(0, 10)}</span>
+              </div>
+            </div>
+            <span class="fit-badge" style="background:${fit >= 90 ? 'rgba(16, 185, 129, 0.15)' : 'rgba(56, 189, 248, 0.15)'}; color:${fit >= 90 ? '#10b981' : '#38bdf8'}; border-color:${fit >= 90 ? 'rgba(16, 185, 129, 0.3)' : 'rgba(56, 189, 248, 0.3)'};">
+              ${fit}% Match
+            </span>
+          </div>
+
+          <div class="card-tags">
+            <span class="tag-chip">⚡ Playwright</span>
+            <span class="tag-chip">TypeScript</span>
+            <span class="tag-chip">${job.role_type || 'Full-time'}</span>
+            ${job.status === 'drafted' ? '<span class="tag-chip" style="background:rgba(168, 85, 247, 0.15); color:#c084fc;">Ready to Apply</span>' : ''}
+          </div>
+
+          <div class="card-actions-row">
+            <a href="${portalUrl}" target="_blank" class="btn-card btn-apply" title="Open Direct Official Portal">
+              🏢 Apply on Portal ↗
+            </a>
+            ${job.cv_file ? `
+              <button class="btn-card btn-cv" onclick="openDocModal('${job.cv_file}', '${escapeHtml(job.company)} - CV')" title="Preview Tailored CV">
+                📄 CV
+              </button>
+            ` : ''}
+            ${job.cover_letter_file ? `
+              <button class="btn-card btn-cl" onclick="openDocModal('${job.cover_letter_file}', '${escapeHtml(job.company)} - Cover Letter')" title="Preview Tailored Cover Letter">
+                ✉️ Letter
+              </button>
+            ` : ''}
+          </div>
+        `;
+        feed.appendChild(card);
+      });
+    }
+
+    function setFilter(f) {
+      currentFilter = f;
+      document.querySelectorAll('.filter-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-filter') === f);
+      });
+      renderFeed();
+    }
+
+    function openDocModal(file, title) {
+      const modal = document.getElementById('mini-pdf-modal');
+      const heading = document.getElementById('modal-heading');
+      const iframe = document.getElementById('modal-pdf-iframe');
+      const dlLink = document.getElementById('modal-download-link');
+
+      heading.innerText = title;
+      const url = `/api/pdf?file=${encodeURIComponent(file)}`;
+      iframe.src = url;
+      dlLink.href = `${url}&download=1`;
+      modal.classList.add('open');
+    }
+
+    function closeDocModal() {
+      const modal = document.getElementById('mini-pdf-modal');
+      modal.classList.remove('open');
+      document.getElementById('modal-pdf-iframe').src = '';
+    }
+
+    // Mini AI Modal Functions
+    function openAiToolsModal() {
+      const modal = document.getElementById('mini-ai-modal');
+      modal.classList.add('open');
+      switchMiniAiTab('ats');
+    }
+
+    function closeAiToolsModal() {
+      const modal = document.getElementById('mini-ai-modal');
+      modal.classList.remove('open');
+    }
+
+    function switchMiniAiTab(tab) {
+      document.querySelectorAll('.mini-ai-tab-btn').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-tab') === tab);
+      });
+      document.getElementById('mini-panel-ats').style.display = tab === 'ats' ? 'block' : 'none';
+      document.getElementById('mini-panel-interview').style.display = tab === 'interview' ? 'block' : 'none';
+      document.getElementById('mini-panel-outreach').style.display = tab === 'outreach' ? 'block' : 'none';
+      document.getElementById('mini-panel-copy').style.display = tab === 'copy' ? 'block' : 'none';
+
+      if (tab === 'interview') loadMiniInterviewQuestions();
+      if (tab === 'copy') loadMiniQuickCopy();
+      if (tab === 'outreach' && !document.getElementById('mini-outreach-subj').value) generateMiniOutreach();
+    }
+
+    async function runMiniAtsScan() {
+      const jd = document.getElementById('mini-ats-jd').value;
+      if (!jd || jd.trim().length < 10) {
+        showToast('Please paste a job description or keywords first.');
+        return;
+      }
+      showToast('Analyzing ATS fit...');
+      try {
+        const res = await fetch('/api/ai/ats-scan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ jobDescription: jd })
+        });
+        const d = await res.json();
+        if (d.success) {
+          document.getElementById('mini-ats-results').style.display = 'block';
+          document.getElementById('mini-ats-score').innerText = `${d.matchScore}%`;
+          document.getElementById('mini-ats-verdict').innerText = d.matchScore >= 90 ? 'Strong ATS Fit' : 'Good Fit';
+
+          const matchDiv = document.getElementById('mini-ats-matched');
+          matchDiv.innerHTML = (d.matchingKeywords || []).map(k => `<span class="tag-chip" style="background:rgba(16,185,129,0.15); color:#10b981; font-size:11px;">${escapeHtml(k)}</span>`).join('');
+
+          const missDiv = document.getElementById('mini-ats-missing');
+          missDiv.innerHTML = (d.missingKeywords || []).map(k => `<span class="tag-chip" style="background:rgba(245,158,11,0.15); color:#fbbf24; font-size:11px;">${escapeHtml(k)}</span>`).join('');
+          showToast(`🎯 ATS Evaluated: ${d.matchScore}% Match!`);
+        }
+      } catch (e) {
+        showToast('ATS scan error: ' + e.message);
+      }
+    }
+
+    async function loadMiniInterviewQuestions() {
+      const list = document.getElementById('mini-interview-list');
+      if (list.children.length > 0) return;
+      list.innerHTML = '<div style="color:var(--text-muted); font-size:12px; text-align:center;">Loading questions...</div>';
+
+      try {
+        const res = await fetch('/api/ai/interview-prep');
+        const d = await res.json();
+        if (d.success && d.questions) {
+          list.innerHTML = '';
+          d.questions.forEach((q, idx) => {
+            const card = document.createElement('div');
+            card.style.cssText = 'background:#111827; border:1px solid var(--border); border-radius:8px; padding:10px; cursor:pointer;';
+            card.innerHTML = `
+              <div style="font-size:12px; font-weight:700; color:#38bdf8; margin-bottom:2px;">${escapeHtml(q.categoryLabel)}</div>
+              <div style="font-size:12.5px; font-weight:800; color:#fff; line-height:1.3;">${escapeHtml(q.question)}</div>
+              <div id="mini-star-ans-${idx}" style="display:none; margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.08); font-size:11.5px; line-height:1.5; color:#cbd5e1;">
+                <p style="margin-bottom:4px;"><strong style="color:#60a5fa;">S:</strong> ${escapeHtml(q.situation)}</p>
+                <p style="margin-bottom:4px;"><strong style="color:#c084fc;">T:</strong> ${escapeHtml(q.task)}</p>
+                <p style="margin-bottom:4px;"><strong style="color:#fde047;">A:</strong> ${escapeHtml(q.action)}</p>
+                <p><strong style="color:#4ade80;">R:</strong> ${escapeHtml(q.result)}</p>
+              </div>
+            `;
+            card.onclick = () => {
+              const el = document.getElementById(`mini-star-ans-${idx}`);
+              el.style.display = el.style.display === 'none' ? 'block' : 'none';
+            };
+            list.appendChild(card);
+          });
+        }
+      } catch (e) {
+        list.innerHTML = `<div style="color:#ef4444; font-size:12px;">Error: ${e.message}</div>`;
+      }
+    }
+
+    async function generateMiniOutreach() {
+      const comp = document.getElementById('mini-outreach-comp').value;
+      const rec = document.getElementById('mini-outreach-rec').value;
+      showToast('Generating pitch...');
+      try {
+        const res = await fetch('/api/ai/outreach', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ company: comp, recipientName: rec, type: 'hiring_manager' })
+        });
+        const d = await res.json();
+        if (d.success) {
+          document.getElementById('mini-outreach-subj').value = d.subject || '';
+          document.getElementById('mini-outreach-body').value = d.body || '';
+          showToast('✨ Outreach pitch generated!');
+        }
+      } catch (e) {
+        showToast('Error: ' + e.message);
+      }
+    }
+
+    async function loadMiniQuickCopy() {
+      const list = document.getElementById('mini-quick-copy-list');
+      if (list.children.length > 0) return;
+
+      try {
+        const res = await fetch('/api/ai/autofill-shortcuts');
+        const d = await res.json();
+        if (d.success) {
+          list.innerHTML = '';
+          const cand = d.candidate;
+          const items = [
+            { label: 'Name', val: cand.name },
+            { label: 'Email', val: cand.email },
+            { label: 'Phone', val: cand.phone },
+            { label: 'Notice Period', val: cand.noticePeriod },
+            { label: 'Location', val: cand.location },
+            { label: 'LinkedIn', val: cand.linkedin },
+            { label: 'GitHub', val: cand.github },
+            { label: 'Playwright Demo', val: cand.demoRepo }
+          ];
+
+          items.forEach(it => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-full-switch';
+            btn.style.cssText = 'width:100%; justify-content:space-between; padding:8px 12px; margin-bottom:4px; text-align:left; border-radius:8px; cursor:pointer;';
+            btn.innerHTML = `
+              <span><strong style="color:var(--primary);">${escapeHtml(it.label)}:</strong> ${escapeHtml(it.val)}</span>
+              <span>📋</span>
+            `;
+            btn.onclick = () => copyMiniField(it.val, it.label);
+            list.appendChild(btn);
+          });
+
+          // Add essay summaries
+          (d.portalAnswers || []).forEach(ans => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-full-switch';
+            btn.style.cssText = 'width:100%; justify-content:space-between; padding:8px 12px; margin-bottom:4px; text-align:left; border-radius:8px; cursor:pointer;';
+            btn.innerHTML = `
+              <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:260px;"><strong style="color:#c084fc;">Essay:</strong> ${escapeHtml(ans.label)}</span>
+              <span>📋</span>
+            `;
+            btn.onclick = () => copyMiniField(ans.text, ans.label);
+            list.appendChild(btn);
+          });
+        }
+      } catch (e) {}
+    }
+
+    function copyMiniField(text, label) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => showToast(`📋 Copied ${label}!`));
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast(`📋 Copied ${label}!`);
+      }
+    }
+
+    window.openAiToolsModal = openAiToolsModal;
+    window.closeAiToolsModal = closeAiToolsModal;
+    window.switchMiniAiTab = switchMiniAiTab;
+    window.runMiniAtsScan = runMiniAtsScan;
+    window.generateMiniOutreach = generateMiniOutreach;
+    window.copyMiniField = copyMiniField;
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      loadMiniData();
+      loadSchedulerStatus();
+      setInterval(loadSchedulerStatus, 30000);
+
+      document.getElementById('mini-search').addEventListener('input', renderFeed);
+
+      document.querySelectorAll('.filter-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          setFilter(btn.getAttribute('data-filter'));
+        });
+      });
+
+      const btnScan = document.getElementById('btn-mini-scan');
+      if (btnScan) {
+        btnScan.addEventListener('click', async () => {
+          btnScan.disabled = true;
+          btnScan.innerHTML = '<span>⏳</span> Scraping live portals...';
+          showToast('⚡ Live scraper running...');
+          try {
+            const res = await fetch('/api/scheduler/trigger', { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+              showToast(`⚡ Scrape complete! ${data.state?.lastDraftedCount || 0} applications tailored.`);
+              await loadMiniData();
+              await loadSchedulerStatus();
+            }
+          } catch (e) {
+            showToast('Scraper error: ' + e.message);
+          } finally {
+            btnScan.disabled = false;
+            btnScan.innerHTML = '<span>⚡</span> Scan &amp; Scrape New Jobs Now';
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

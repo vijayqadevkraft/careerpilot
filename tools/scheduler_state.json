@@ -1,0 +1,10 @@
+{
+  "active": true,
+  "intervalHours": 6,
+  "status": "idle",
+  "lastRun": "2026-11-17T23:05:44.933Z",
+  "nextRun": "2026-11-23T12:45:36.581Z",
+  "runCount": 14,
+  "totalDrafted": 112,
+  "lastDraftedCount": 4
+}

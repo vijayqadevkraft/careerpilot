@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "CareerPilot — AI Job AutoFill (Vijay Kumar)",
+  "version": "1.0.0",
+  "description": "Zero-click job application auto-fill for LinkedIn, Greenhouse, Lever, Workday, and tech company career portals.",
+  "permissions": ["storage", "activeTab"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "CareerPilot AutoFill"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ]
+}
