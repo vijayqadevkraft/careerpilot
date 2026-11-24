@@ -1,7 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import dns from 'node:dns';
 import { MongoClient } from 'mongodb';
+
+// Ensure reliable SRV DNS resolution across all networks/ISPs
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch (e) {}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
