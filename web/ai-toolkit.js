@@ -4,29 +4,13 @@
  * Provides ATS Scanning, Keyword Optimization, STAR Interview Coaching, Recruiter Outreach, and Auto-Fill Templates.
  */
 
-// Master candidate keyword lexicon & competencies for Vijay Kumar
-const CANDIDATE_PROFILE = {
-  name: "Vijay Kumar",
-  title: "Senior QA Automation Engineer / QA Lead / SDET",
-  experienceYears: 5,
-  noticePeriod: "15 Days",
-  location: "India (Open to Remote / Major Tech Hubs)",
-  email: "vijaychuhan007@gmail.com",
-  phone: "+91 7696122634",
-  linkedin: "https://www.linkedin.com/in/vijay-007",
-  github: "https://github.com/vijayqadevkraft",
-  demoRepo: "https://github.com/vijayqadevkraft/playwright-demo",
-  skills: [
-    "Manual Testing", "Test Case Design", "Functional Testing", "Exploratory Testing",
-    "STLC", "Defect Management", "JIRA", "Bug Triage", "User Acceptance Testing", "UAT",
-    "Smoke Testing", "Sanity Testing", "Boundary Value Analysis", "Regression Testing",
-    "Playwright", "TypeScript", "JavaScript", "Java Selenium", "Page Object Model", "POM",
-    "CI/CD Integration", "GitHub Actions", "Jenkins", "Pipeline Automation", "Quality Gates",
-    "API Testing", "Postman", "REST API", "JSON", "BrowserStack", "Cross-browser Testing",
-    "E2E Testing", "QA Team Leadership", "Mentorship", "Test Strategy", "Test Planning",
-    "Root Cause Analysis", "Agile", "Scrum", "Prompt Engineering"
-  ]
-};
+import { getCandidateProfile } from '../tools/profile.js';
+
+// Master candidate keyword lexicon & competencies synced from CLAUDE.md
+export function getSyncedCandidateProfile() {
+  return getCandidateProfile();
+}
+const CANDIDATE_PROFILE = getCandidateProfile();
 
 // ATS Keyword Dictionary
 const ATS_KEYWORD_MAP = {
@@ -76,97 +60,114 @@ const COMMON_TECH_KEYWORDS = [
 ];
 
 /**
- * 1. ATS Scan & Resume Optimizer
+ * 1. ATS Scan & Resume Optimizer (Real keyword & skill extraction against synced CLAUDE.md profile)
  */
 export function analyzeAtsMatch(jobDescription, targetRole = "", targetCompany = "") {
+  const profile = getSyncedCandidateProfile();
   const text = (jobDescription || "").toLowerCase();
   const roleText = (targetRole || "").toLowerCase();
-  const fullText = `${roleText} ${text}`;
+  const fullText = `${roleText} ${text}`.trim();
 
-  if (!text || text.trim().length < 20) {
+  if (!fullText || (text.trim().length < 20 && roleText.trim().length < 3)) {
     return {
-      matchScore: 92,
-      matchingKeywords: ["Playwright", "TypeScript", "CI/CD Pipelines", "Page Object Model", "API Testing", "JIRA", "QA Leadership", "Regression Testing"],
-      missingKeywords: ["Docker", "Kubernetes", "k6 Performance"],
+      matchScore: 0,
+      matchingKeywords: [],
+      missingKeywords: [],
       recommendations: [
-        "Include your 60% test runtime reduction metric prominently in the summary.",
-        "Highlight your leadership of 5 QA Technicians at Devkraft Technologies.",
-        "Emphasize TypeScript Page Object Model framework architecture."
+        "Paste the full job description (at least 20 characters) to run an accurate ATS keyword scan.",
+        `Target your summary specifically for ${targetRole || "the target role"} at ${targetCompany || "the hiring company"}.`
       ],
-      suggestedBullets: [
-        "Architected modular Playwright & TypeScript test framework with Page Object Model, slashing CI/CD test execution time by 60%.",
-        "Directed a high-performing team of 5 QA technicians across web and mobile platforms with zero critical defect escapes for key client releases.",
-        "Configured automated API and E2E regression suites in GitHub Actions / Jenkins, accelerating deployment velocity."
-      ]
+      suggestedBullets: []
     };
   }
 
+  const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const foundInJd = new Set();
   COMMON_TECH_KEYWORDS.forEach(kw => {
-    if (fullText.includes(kw)) {
+    const pattern = new RegExp(`(^|[^a-z0-9])${escapeRegex(kw)}([^a-z0-9]|$)`, 'i');
+    if (pattern.test(fullText)) {
       foundInJd.add(kw);
     }
   });
 
   const matchingKeywords = [];
   const missingKeywords = [];
-
-  // Match against Vijay's profile
-  const candidateLowerSkills = CANDIDATE_PROFILE.skills.map(s => s.toLowerCase());
+  const candidateLowerSkills = profile.skills.map(s => s.toLowerCase());
 
   foundInJd.forEach(kw => {
     const isMatched = candidateLowerSkills.some(skill => skill.includes(kw) || kw.includes(skill));
     const label = ATS_KEYWORD_MAP[kw] || (kw.charAt(0).toUpperCase() + kw.slice(1));
 
-    if (isMatched || ["playwright", "typescript", "javascript", "selenium", "jenkins", "github actions", "api", "postman", "jira", "browserstack", "e2e", "regression", "agile", "lead"].includes(kw)) {
+    if (isMatched) {
       if (!matchingKeywords.includes(label)) matchingKeywords.push(label);
     } else {
       if (!missingKeywords.includes(label)) missingKeywords.push(label);
     }
   });
 
-  // Always ensure core strengths are highlighted
-  if (!matchingKeywords.includes("Playwright")) matchingKeywords.unshift("Playwright");
-  if (!matchingKeywords.includes("TypeScript")) matchingKeywords.unshift("TypeScript");
-  if (!matchingKeywords.includes("CI/CD Pipelines")) matchingKeywords.push("CI/CD Pipelines");
-
-  // Calculate score
   const totalRelevant = matchingKeywords.length + missingKeywords.length;
-  let matchScore = 88;
+  let matchScore = 0;
   if (totalRelevant > 0) {
     matchScore = Math.round((matchingKeywords.length / totalRelevant) * 100);
-    // Weighted floor for Vijay's Senior QA background
-    if (matchScore < 78) matchScore = 82;
-    if (matchScore > 98) matchScore = 98;
+  } else if (text.trim().length >= 20) {
+    // Non-tech / general JD with no recognized tech keywords
+    matchScore = 15;
   }
 
-  // Recommendations
   const recommendations = [];
-  if (missingKeywords.some(k => ['Docker', 'Kubernetes', 'Aws'].includes(k))) {
-    recommendations.push("The posting mentions container/cloud infrastructure: Highlight how your Playwright suites run inside containerized CI/CD runners.");
+  if (text.trim().length < 20) {
+    recommendations.push("Only a short role title was provided; paste the full job description for deeper keyword coverage.");
   }
-  if (missingKeywords.some(k => ['K6', 'Jmeter', 'Performance'].includes(k))) {
-    recommendations.push("Performance testing is noted: Reference API response time benchmarking in Postman alongside functional automation.");
+  if (missingKeywords.length > 0) {
+    recommendations.push(`Address missing keywords detected in the JD where you have adjacent experience: ${missingKeywords.slice(0, 5).join(', ')}.`);
   }
-  if (missingKeywords.some(k => ['Cypress', 'Python'].includes(k))) {
-    recommendations.push("The JD references alternative test stacks: Emphasize your rapid framework onboarding and architectural equivalence with modern TypeScript/Playwright.");
+  if (matchingKeywords.length > 0) {
+    recommendations.push(`Lead your summary and top bullets with matched skills: ${matchingKeywords.slice(0, 4).join(', ')}.`);
   }
-  recommendations.push("Ensure your 60% test execution reduction metric is placed within the top 3 bullet points of your CV.");
-  recommendations.push(`Explicitly align your cover letter with ${targetCompany || "the hiring team"}'s continuous delivery quality goals.`);
+  recommendations.push(`Tailor your cover letter to ${targetCompany || "the hiring team"}'s ${targetRole || "engineering"} priorities.`);
 
+  const topMatched = matchingKeywords.slice(0, 3).join(', ') || 'Playwright, TypeScript & CI/CD';
   const suggestedBullets = [
-    `Architected enterprise Playwright & TypeScript test framework utilizing Page Object Model, cutting execution cycles by 60%.`,
-    `Led 5 QA technicians across Android and Web platforms, establishing automated quality gates in CI/CD (GitHub Actions / Jenkins).`,
-    `Engineered end-to-end API and UI validation suites integrated with JIRA defect tracking, ensuring 0 critical defects on production deployments.`
+    `Architected modular ${topMatched} test automation suites with Page Object Model for ${targetCompany || 'enterprise'} web & API workflows, cutting regression cycles by 60%.`,
+    `Led 5 QA engineers across Agile sprints, establishing automated quality gates and JIRA defect triage that cut dev-fix turnaround time by 40%.`,
+    `Designed end-to-end functional, regression, and API validation coverage aligned with ${targetRole || 'Senior QA'} release criteria.`
   ];
 
   return {
     matchScore,
     matchingKeywords,
-    missingKeywords: missingKeywords.slice(0, 5),
+    missingKeywords: missingKeywords.slice(0, 8),
     recommendations,
     suggestedBullets
   };
+}
+
+/**
+ * Optional live LLM-enhanced ATS scan when GEMINI_API_KEY or OPENAI_API_KEY is configured.
+ */
+export async function analyzeAtsMatchAsync(jobDescription, targetRole = "", targetCompany = "") {
+  const base = analyzeAtsMatch(jobDescription, targetRole, targetCompany);
+  const geminiKey = process.env.GEMINI_API_KEY;
+  if (!geminiKey || !jobDescription || jobDescription.trim().length < 40) {
+    return base;
+  }
+  try {
+    const profile = getSyncedCandidateProfile();
+    const prompt = `Analyze ATS fit between candidate (${profile.name}, ${profile.title}, skills: ${profile.skills.join(', ')}) and role "${targetRole}" at "${targetCompany}". JD: ${jobDescription.slice(0, 2500)}. Return strict JSON: {"matchScore":number,"matchingKeywords":string[],"missingKeywords":string[],"recommendations":string[],"suggestedBullets":string[]}`;
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(geminiKey)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { responseMimeType: 'application/json' } })
+    });
+    if (!res.ok) return base;
+    const data = await res.json();
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    const parsed = text ? JSON.parse(text) : null;
+    if (parsed && typeof parsed.matchScore === 'number') return parsed;
+  } catch {
+    // Fall back cleanly to deterministic keyword analysis
+  }
+  return base;
 }
 
 /**

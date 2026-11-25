@@ -4,12 +4,24 @@ import path from 'path';
 import os from 'os';
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
+import { getCandidateProfile } from '../profile.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.resolve(__dirname, '..', '..');
 
 const LOG_FILE = path.join(__dirname, 'autofill.log');
+const STATE_FILE = path.join(__dirname, 'state.json');
+
+function setAutomationState(state, extra = {}) {
+  try {
+    fs.writeFileSync(STATE_FILE, JSON.stringify({
+      state,
+      ...extra,
+      updatedAt: new Date().toISOString()
+    }), 'utf8');
+  } catch (e) {}
+}
 
 function log(msg) {
   const line = `[${new Date().toISOString()}] ${msg}\n`;
@@ -28,29 +40,30 @@ process.on('unhandledRejection', (reason) => {
   log(`[GUARD] Unhandled Rejection: ${reason}`);
 });
 
-// Candidate Profile Constants (Vijay Kumar - 5 yrs Senior QA Automation)
+// Candidate Profile synced from CLAUDE.md
+const _syncedProfile = getCandidateProfile();
 const PROFILE = {
-  firstName: "Vijay",
-  lastName: "Kumar",
-  fullName: "Vijay Kumar",
-  email: "vijaychuhan007@gmail.com",
-  phone: "+91 7696122634",
-  phoneDigits: "7696122634",
+  firstName: _syncedProfile.firstName || "Vijay",
+  lastName: _syncedProfile.lastName || "Kumar",
+  fullName: _syncedProfile.name || "Vijay Kumar",
+  email: _syncedProfile.email || "vijaychuhan007@gmail.com",
+  phone: _syncedProfile.phone || "+91 7696122634",
+  phoneDigits: (_syncedProfile.phone || "7696122634").replace(/\D/g, '').slice(-10),
   countryCode: "+91",
-  linkedIn: "https://www.linkedin.com/in/vijay-007",
-  github: "https://github.com/vijayqadevkraft",
-  portfolio: "https://github.com/vijayqadevkraft",
-  location: "India",
+  linkedIn: _syncedProfile.linkedin || "https://www.linkedin.com/in/vijay-007",
+  github: _syncedProfile.github || "https://github.com/vijayqadevkraft",
+  portfolio: _syncedProfile.github || "https://github.com/vijayqadevkraft",
+  location: _syncedProfile.location || "India",
   city: "Jalandhar",
   state: "Punjab",
   postalCode: "144001",
   country: "India",
   nationality: "Indian",
   currentCompany: "XianInfotech LLP",
-  currentTitle: "Senior QA Engineer",
-  yearsExperience: "5",
+  currentTitle: _syncedProfile.title || "Senior QA Engineer",
+  yearsExperience: String(_syncedProfile.experienceYears || 5),
   noticePeriod: "15",
-  noticePeriodFull: "15 days",
+  noticePeriodFull: _syncedProfile.noticePeriod || "15 days",
   workAuthorization: "Yes",
   requireSponsorship: "No",
   gender: "Male",
@@ -64,35 +77,58 @@ const CHROME_PATH = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
 const EDGE_PATH = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
 
 // Bring browser to front on Windows so user immediately sees the window
-function bringBrowserToFront() {
+function bringBrowserToFront(sessionDir = '') {
   if (process.platform === 'win32') {
     try {
+      const profileTag = sessionDir ? path.basename(sessionDir) : 'cp_profile_';
       const ps = `
         Add-Type -TypeDefinition @"
         using System;
         using System.Runtime.InteropServices;
         public class Win32Focus {
-          [DllImport("user32.dll")]
-          public static extern bool SetForegroundWindow(IntPtr hWnd);
-          [DllImport("user32.dll")]
-          public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+          [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr hWnd);
+          [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+          [DllImport("user32.dll")] public static extern bool BringWindowToTop(IntPtr hWnd);
+          [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
+          [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+          [DllImport("kernel32.dll")] public static extern uint GetCurrentThreadId();
+          [DllImport("user32.dll")] public static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
         }
 "@
-        $procs = Get-Process chrome, msedge -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowTitle -ne '' } | Sort-Object StartTime -Descending;
-        if ($procs) {
-          $h = $procs[0].MainWindowHandle;
-          if ($h -ne [IntPtr]::Zero) {
-            [Win32Focus]::ShowWindow($h, 3);
-            [Win32Focus]::SetForegroundWindow($h);
+        $target = $null;
+        $wmi = Get-CimInstance Win32_Process -Filter "Name='chrome.exe' OR Name='msedge.exe'" -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -like '*${profileTag}*' };
+        if ($wmi) {
+          $pids = $wmi | ForEach-Object { $_.ProcessId };
+          $target = Get-Process -Id $pids -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowHandle -ne 0 } | Select-Object -First 1;
+        }
+        if (-not $target) {
+          $target = Get-Process chrome, msedge -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowHandle -ne 0 -and $_.MainWindowTitle -ne '' } | Sort-Object StartTime -Descending | Select-Object -First 1;
+        }
+        if ($target) {
+          $h = $target.MainWindowHandle;
+          $fg = [Win32Focus]::GetForegroundWindow();
+          $pidOut = 0;
+          $fgThread = [Win32Focus]::GetWindowThreadProcessId($fg, [ref]$pidOut);
+          $curThread = [Win32Focus]::GetCurrentThreadId();
+          if ($fgThread -ne 0 -and $fgThread -ne $curThread) {
+            [Win32Focus]::AttachThreadInput($curThread, $fgThread, $true) | Out-Null;
+          }
+          [Win32Focus]::ShowWindow($h, 9) | Out-Null;
+          [Win32Focus]::ShowWindow($h, 3) | Out-Null;
+          [Win32Focus]::BringWindowToTop($h) | Out-Null;
+          [Win32Focus]::SetForegroundWindow($h) | Out-Null;
+          if ($fgThread -ne 0 -and $fgThread -ne $curThread) {
+            [Win32Focus]::AttachThreadInput($curThread, $fgThread, $false) | Out-Null;
           }
         }
       `;
-      spawn('powershell', ['-NoProfile', '-NonInteractive', '-Command', ps], { stdio: 'ignore' }).unref();
+      spawn('powershell', ['-NoProfile', '-NonInteractive', '-Command', ps], { stdio: 'ignore', windowsHide: true }).unref();
     } catch (e) {}
   }
 }
 
 async function runAutoFill(targetUrl, cvFilePath) {
+  setAutomationState('Initializing', { url: targetUrl });
   log(`=======================================================`);
   log(`=== Starting CareerPilot AutoFill Session ===`);
   log(`Target URL: ${targetUrl}`);
@@ -143,7 +179,9 @@ async function runAutoFill(targetUrl, cvFilePath) {
       ]
     });
     log(`Browser launched with isolated persistent context successfully.`);
+    setAutomationState('Browser Launched', { url: targetUrl });
   } catch (err) {
+    setAutomationState('Failed', { error: err.message });
     log(`Launch error: ${err.message}`);
     process.exit(1);
   }
@@ -277,27 +315,30 @@ async function runAutoFill(targetUrl, cvFilePath) {
   context.on('page', async (newPage) => {
     log(`[EVENT] New tab/window opened: ${newPage.url()}`);
     await setupPage(newPage);
-    bringBrowserToFront();
+    bringBrowserToFront(sessionDir);
   });
 
-  // Navigate main page to target URL
+  // Navigate main page to target URL with retry error recovery
   if (targetUrl) {
-    try {
-      log(`Navigating main page to: ${targetUrl}`);
-      // Use 'commit' for ultra-fast startup without waiting for slow third-party ad pixels/trackers
-      await mainPage.goto(targetUrl, { waitUntil: 'commit', timeout: 25000 });
-      await mainPage.waitForLoadState('domcontentloaded', { timeout: 8000 }).catch(() => {});
-      log(`Navigation reached: ${mainPage.url()}`);
-      bringBrowserToFront();
-    } catch (err) {
-      log(`Navigation note (page still open): ${err.message}`);
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        log(`Navigating main page to: ${targetUrl} (attempt ${attempt}/2)`);
+        await mainPage.goto(targetUrl, { waitUntil: 'commit', timeout: 25000 });
+        await mainPage.waitForLoadState('domcontentloaded', { timeout: 8000 }).catch(() => {});
+        log(`Navigation reached: ${mainPage.url()}`);
+        bringBrowserToFront(sessionDir);
+        break;
+      } catch (err) {
+        log(`Navigation recovery (attempt ${attempt}): ${err.message}`);
+        if (attempt < 2) await mainPage.waitForTimeout(1000).catch(() => {});
+      }
     }
   }
 
   // Initial fill attempt
   setTimeout(async () => {
     try {
-      bringBrowserToFront();
+      bringBrowserToFront(sessionDir);
       await autoAdvanceApply(mainPage);
       await autoFillEmailStep(mainPage);
       await fillAllFrames(mainPage, resolvedCvPath, false);
@@ -334,10 +375,13 @@ async function autoAdvanceApply(page) {
 
     // 2. Selectors for Apply Buttons across all ATS platforms
     const applySelectors = [
+      'a.postings-btn[href$="/apply"]',
+      'a[href$="/apply"]',
       '.dialogApplyBtn',
       'a[href*="/apply/"]',
       'a[href*="talentcommunity/apply"]',
       'a:has-text("Apply on company website")',
+      'a:has-text("Apply for this job")',
       'a:has-text("Apply Now")',
       'button:has-text("Apply Now")',
       'button:has-text("APPLY NOW")',
@@ -348,13 +392,12 @@ async function autoAdvanceApply(page) {
       'oj-button:has-text("Apply Now")',
       'a#applyOption-top-manual',
       'a.socialbutton-link',
-      '#apply_button',
-      'a:has-text("Apply for this job")'
+      '#apply_button'
     ];
 
     for (const sel of applySelectors) {
       const btn = page.locator(sel).first();
-      if (await btn.count() > 0) {
+      if (await btn.count() > 0 && await btn.isVisible().catch(() => false)) {
         log(`[AUTO-ADVANCE] Found Apply trigger (${sel}) on ${currentUrl}. Clicking...`);
         // Try direct click with force: true
         await btn.click({ force: true, timeout: 3000 }).catch(async () => {
@@ -402,7 +445,7 @@ async function autoFillVerificationCode(page) {
     if (fs.existsSync(CODE_FILE)) {
       const data = JSON.parse(fs.readFileSync(CODE_FILE, 'utf8'));
       if (data && data.code && !data.applied) {
-        log(`[AUTO-FILL] Verification code ${data.code} detected from portal. Finding code input...`);
+        log(`[AUTO-FILL] Verification code [REDACTED] detected from portal. Finding code input...`);
         const frames = page.frames();
         let filled = false;
 
@@ -410,6 +453,8 @@ async function autoFillVerificationCode(page) {
           if (filled) break;
           try {
             const selectors = [
+              'input[autocomplete="one-time-code"]',
+              'input[name*="otp" i]',
               'input[name*="code" i]',
               'input[id*="code" i]',
               'input[name*="verification" i]',
@@ -428,7 +473,7 @@ async function autoFillVerificationCode(page) {
                 filled = true;
                 data.applied = true;
                 fs.writeFileSync(CODE_FILE, JSON.stringify(data), 'utf8');
-                log(`[AUTO-FILL] Code ${data.code} entered successfully into ${sel}!`);
+                log(`[AUTO-FILL] Verification code [REDACTED] entered into ${sel}.`);
 
                 // Click Verify / Continue / Next / Submit button
                 const verifyBtn = frame.locator('button:has-text("VERIFY"), button:has-text("Verify"), button:has-text("SUBMIT"), button:has-text("Submit"), button:has-text("NEXT"), button:has-text("Next"), button:has-text("Continue"), button[type="submit"]').first();
@@ -445,6 +490,22 @@ async function autoFillVerificationCode(page) {
     }
   } catch (e) {
     log(`[CODE ERROR] ${e.message}`);
+  }
+}
+
+async function detectSecurityGates(page) {
+  if (page.isClosed()) return { otpRequired: false, captchaDetected: false };
+  try {
+    return await page.evaluate(() => {
+      const captchaDetected = Boolean(
+        document.querySelector('iframe[src*="hcaptcha"], iframe[src*="recaptcha"], iframe[src*="turnstile"], .cf-turnstile, .g-recaptcha, .h-captcha, [data-sitekey]')
+      );
+      const otpInput = document.querySelector('input[autocomplete="one-time-code"], input[name*="otp" i], input[name*="verification" i], input[id*="verification" i]');
+      const otpRequired = Boolean(otpInput && otpInput.offsetParent !== null);
+      return { otpRequired, captchaDetected };
+    });
+  } catch {
+    return { otpRequired: false, captchaDetected: false };
   }
 }
 
@@ -487,11 +548,48 @@ async function fillAllFrames(page, cvFilePath, showToast = false) {
           return true;
         }
 
+        function getFieldMeta(elem) {
+          const parts = [
+            elem.name || '',
+            elem.id || '',
+            elem.placeholder || '',
+            elem.getAttribute('aria-label') || '',
+            elem.getAttribute('data-qa') || '',
+            elem.className || ''
+          ];
+
+          if (elem.id) {
+            try {
+              const lbl = document.querySelector(`label[for="${CSS.escape(elem.id)}"]`);
+              if (lbl) parts.push(lbl.innerText || lbl.textContent || '');
+            } catch (e) {}
+          }
+
+          const labelledBy = elem.getAttribute('aria-labelledby');
+          if (labelledBy) {
+            for (const lid of labelledBy.split(/\s+/)) {
+              const el = document.getElementById(lid);
+              if (el) parts.push(el.innerText || el.textContent || '');
+            }
+          }
+
+          const parentLabel = elem.closest('label');
+          if (parentLabel) parts.push(parentLabel.innerText || parentLabel.textContent || '');
+
+          const questionWrap = elem.closest('.application-question, .application-field, [class*="question" i], [class*="field" i]');
+          if (questionWrap) {
+            const qLabel = questionWrap.querySelector('.application-label, .label, label, legend, [class*="label" i]');
+            if (qLabel) parts.push(qLabel.innerText || qLabel.textContent || '');
+          }
+
+          return parts.join(' ').toLowerCase();
+        }
+
         // Match all interactive inputs & textareas
         const inputs = Array.from(document.querySelectorAll('input:not([type="hidden"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]), textarea'));
 
         for (const input of inputs) {
-          const meta = `${input.name || ''} ${input.id || ''} ${input.placeholder || ''} ${input.getAttribute('aria-label') || ''} ${input.className || ''}`.toLowerCase();
+          const meta = getFieldMeta(input);
 
           // Anti-bot Honeypot guard
           if (meta.includes('honey') || meta.includes('pot') || meta.includes('bot')) continue;
@@ -544,7 +642,7 @@ async function fillAllFrames(page, cvFilePath, showToast = false) {
             if (setVal(input, p.location)) count++;
           }
           // Current Company
-          else if (meta.includes('company') || meta.includes('employer') || meta.includes('organization') || meta.includes('current_company')) {
+          else if (meta.includes('company') || meta.includes('employer') || meta.includes('organization') || meta.includes('current_company') || /\borg\b/.test(meta) || meta.includes('org-input')) {
             if (setVal(input, p.currentCompany)) count++;
           }
           // Current Title / Designation
@@ -645,8 +743,32 @@ async function fillAllFrames(page, cvFilePath, showToast = false) {
     } catch (e) {}
   }
 
+  const gates = await detectSecurityGates(page);
+  if (gates.otpRequired || gates.captchaDetected) {
+    setAutomationState('Awaiting User Review', {
+      url: page.url(),
+      otpRequired: gates.otpRequired,
+      captchaDetected: gates.captchaDetected
+    });
+    log(`[GATE] Paused for manual intervention (OTP=${gates.otpRequired}, CAPTCHA=${gates.captchaDetected})`);
+  }
+
   if (filledTotal > 0) {
     log(`[AUTOFILL] Populated ${filledTotal} field(s)/actions on ${page.url()}`);
+    if (!gates.otpRequired && !gates.captchaDetected) {
+      setAutomationState('Ready for Submission', { url: page.url(), filledFields: filledTotal });
+    }
+    // Approval Guard: highlight final submit button for human review, never auto-submit
+    try {
+      await page.evaluate(() => {
+        const submitBtns = document.querySelectorAll('button[type="submit"], #btn-submit, button[data-qa="btn-submit"], input[type="submit"]');
+        submitBtns.forEach(btn => {
+          btn.style.outline = '3px dashed #f59e0b';
+          btn.style.outlineOffset = '3px';
+          btn.title = 'CareerPilot: Review pre-filled details and click to submit';
+        });
+      });
+    } catch (e) {}
   }
 
   return filledTotal;

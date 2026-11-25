@@ -142,9 +142,12 @@ export async function getJobById(id) {
   return jobs.find(j => j.id === id) || null;
 }
 
-// UPDATE job status
-export async function updateJobStatus(id, status) {
+// UPDATE job status (with optional submission metadata)
+export async function updateJobStatus(id, status, metadata = {}) {
   let updatedJob = null;
+  const setFields = { status, updatedAt: new Date().toISOString() };
+  if (metadata.submitted_at) setFields.submitted_at = metadata.submitted_at;
+  if (metadata.confirmation_evidence) setFields.confirmation_evidence = metadata.confirmation_evidence;
 
   if (isMongoConfigured()) {
     try {
@@ -152,7 +155,7 @@ export async function updateJobStatus(id, status) {
       if (col) {
         const res = await col.findOneAndUpdate(
           { id },
-          { $set: { status, updatedAt: new Date().toISOString() } },
+          { $set: setFields },
           { returnDocument: 'after' }
         );
         if (res) {
@@ -171,6 +174,8 @@ export async function updateJobStatus(id, status) {
     const job = jobs.find(j => j.id === id);
     if (job) {
       job.status = status;
+      if (metadata.submitted_at) job.submitted_at = metadata.submitted_at;
+      if (metadata.confirmation_evidence) job.confirmation_evidence = metadata.confirmation_evidence;
       saveTrackerCSV(jobs);
       if (!updatedJob) updatedJob = job;
     }

@@ -1,14 +1,14 @@
 :root {
-  /* Main Colors & Theme */
-  --bg-app: #f4f6fa;
-  --bg-sidebar: #0c1322;
-  --bg-sidebar-card: #141c30;
+  /* Modern Light SaaS Theme */
+  --bg-app: #f8fafc;
+  --bg-sidebar: #0f172a;
+  --bg-sidebar-card: #1e293b;
   --bg-card: #ffffff;
   --bg-card-hover: #f8fafc;
   
   --border-light: #e2e8f0;
   --border-dark: rgba(255, 255, 255, 0.08);
-  --border-card: #edf2f7;
+  --border-card: #e2e8f0;
 
   --text-main: #0f172a;
   --text-muted: #64748b;
@@ -16,12 +16,12 @@
   --text-white: #ffffff;
 
   /* Accents */
-  --primary: #3b82f6;
-  --primary-hover: #2563eb;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
   --primary-light: #eff6ff;
-  --primary-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+  --primary-gradient: linear-gradient(135deg, #4f46e5, #2563eb);
 
-  --accent-purple: #8b5cf6;
+  --accent-purple: #7c3aed;
   --accent-purple-light: #f5f3ff;
   --accent-green: #10b981;
   --accent-green-light: #ecfdf5;
@@ -1908,4 +1908,107 @@ body {
 .reminder-card-item.low {
   border-left: 4px solid #64748b;
 }
+
+/* App Toast Notification */
+#app-toast {
+  position: fixed;
+  top: 24px;
+  right: 28px;
+  z-index: 9999;
+  background: #0f172a;
+  color: #fff;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(460px, calc(100vw - 48px));
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+#app-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+#app-toast.toast-error {
+  border-color: rgba(248, 113, 113, 0.6);
+}
+
+/* === Modern Light SaaS Polish === */
+body {
+  background-color: #f8fafc;
+  background-image:
+    radial-gradient(circle at 85% 0%, rgba(37, 99, 235, 0.05) 0%, transparent 45%),
+    radial-gradient(circle at 15% 10%, rgba(99, 102, 241, 0.04) 0%, transparent 40%);
+  color: #0f172a;
+}
+
+.sidebar {
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+}
+
+.topbar {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.stat-card,
+.panel,
+.panel-card,
+.pipeline-panel,
+.card,
+.table-wrap {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.03);
+}
+
+.stat-card:hover,
+.kanban-card:hover,
+.mini-job-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+}
+
+table th {
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 700;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+table td {
+  background: #ffffff;
+  color: #1e293b;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+table tbody tr:hover td {
+  background: #f8fafc;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #4f46e5, #2563eb);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.22);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+
+
+
+
 

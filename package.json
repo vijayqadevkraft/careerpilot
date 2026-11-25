@@ -8,7 +8,7 @@
     "start": "node web/server.js",
     "autopilot": "node tools/autopilot.js",
     "migrate:mongo": "node tools/migrate_to_mongo.js",
-    "test": "node --check web/server.js && node --check web/ai-toolkit.js && node --check tools/db.js"
+    "test": "node --check web/server.js && node --check web/ai-toolkit.js && node --check tools/db.js && node --check tools/profile.js && node --check tools/autofill/autofill.js && node --test tests/test_api_integration.mjs tests/test_web_security.mjs"
   },
   "dependencies": {
     "mongodb": "^6.10.0"

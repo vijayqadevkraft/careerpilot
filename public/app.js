@@ -7,35 +7,33 @@ function showToast(msg, isSuccess = true) {
   if (!toast) {
     toast = document.createElement('div');
     toast.id = 'app-toast';
-    toast.style.cssText = `
-      position: fixed;
-      top: 24px;
-      right: 28px;
-      z-index: 9999;
-      background: #0f172a;
-      color: #fff;
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      padding: 12px 20px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 700;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: all 0.25s ease;
-      opacity: 0;
-      transform: translateY(-10px);
-    `;
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
     document.body.appendChild(toast);
+    // Force layout before adding .show so the opacity transition triggers
+    void toast.offsetWidth;
   }
+
+  if (toast._hideTimer) {
+    clearTimeout(toast._hideTimer);
+    toast._hideTimer = null;
+  }
+
+  toast.classList.toggle('toast-error', !isSuccess);
   toast.innerHTML = `<span>${isSuccess ? '⚡' : '⚠️'}</span> <span>${escapeHtml(msg)}</span>`;
+  toast.classList.add('show');
   toast.style.opacity = '1';
   toast.style.transform = 'translateY(0)';
-  setTimeout(() => {
+  toast.style.pointerEvents = 'auto';
+
+  const durationMs = isSuccess ? 4000 : 7000;
+  toast._hideTimer = setTimeout(() => {
+    toast.classList.remove('show');
     toast.style.opacity = '0';
     toast.style.transform = 'translateY(-10px)';
-  }, 4000);
+    toast.style.pointerEvents = 'none';
+    toast._hideTimer = null;
+  }, durationMs);
 }
 
 // Init
@@ -1376,31 +1374,86 @@ function setupModals() {
 
   const ftBtnPrev = document.getElementById('ft-btn-prev');
   const ftBtnSkip = document.getElementById('ft-btn-skip');
+  const ftBtnNext = document.getElementById('ft-btn-next');
   const ftBtnMarkNext = document.getElementById('ft-btn-mark-next');
+  const ftBtnReviewEdit = document.getElementById('ft-btn-review-edit');
+  const ftBtnApproveSubmit = document.getElementById('ft-btn-approve-submit');
 
   if (ftBtnPrev) {
     ftBtnPrev.addEventListener('click', () => {
       if (fastTrackIndex > 0) {
         fastTrackIndex--;
+        saveFastTrackProgress();
         renderFastTrackCard();
       }
     });
   }
   if (ftBtnSkip) {
-    ftBtnSkip.addEventListener('click', () => {
-      fastTrackIndex++;
+    ftBtnSkip.addEventListener('click', async () => {
+      const currentJob = fastTrackQueue[fastTrackIndex];
+      if (currentJob) {
+        await changeJobStatus(currentJob.id, 'Skipped');
+        currentJob.status = 'Skipped';
+        showToast(`⏭️ Marked ${currentJob.company} as Skipped.`, true);
+      }
+      if (fastTrackIndex < fastTrackQueue.length) fastTrackIndex++;
+      saveFastTrackProgress();
+      renderFastTrackCard();
+    });
+  }
+  if (ftBtnNext) {
+    ftBtnNext.addEventListener('click', () => {
+      if (fastTrackIndex < fastTrackQueue.length) fastTrackIndex++;
+      saveFastTrackProgress();
       renderFastTrackCard();
     });
   }
   if (ftBtnMarkNext) {
-    ftBtnMarkNext.addEventListener('click', async () => {
+    ftBtnMarkNext.addEventListener('click', () => {
+      openFastTrackApprovalPanel();
+    });
+  }
+  if (ftBtnReviewEdit) {
+    ftBtnReviewEdit.addEventListener('click', () => {
+      const panel = document.getElementById('ft-approval-panel');
+      if (panel) panel.style.display = 'none';
+    });
+  }
+  if (ftBtnApproveSubmit) {
+    ftBtnApproveSubmit.addEventListener('click', async () => {
       const currentJob = fastTrackQueue[fastTrackIndex];
-      if (currentJob) {
-        await markJobAsApplied(currentJob.id);
-        showToast(`✓ Marked ${currentJob.company} as Applied! Moving to next...`, true);
+      if (!currentJob) return;
+      ftBtnApproveSubmit.disabled = true;
+      try {
+        const res = await fetch('/api/jobs/update-status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: currentJob.id,
+            status: 'Submitted',
+            submitted_at: new Date().toISOString(),
+            confirmation_evidence: 'User-approved submission via Fast-Track'
+          })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          showToast(`Submission update failed: ${data.error || res.statusText}`, false);
+          return;
+        }
+        currentJob.status = 'Submitted';
+        currentJob.submitted_at = data.job?.submitted_at || new Date().toISOString();
+        const panel = document.getElementById('ft-approval-panel');
+        if (panel) panel.style.display = 'none';
+        showToast(`✅ Approved & marked ${currentJob.company} as Submitted.`, true);
+        await fetchJobs();
+        fastTrackIndex++;
+        saveFastTrackProgress();
+        renderFastTrackCard();
+      } catch (e) {
+        showToast(`Error recording submission: ${e.message}`, false);
+      } finally {
+        ftBtnApproveSubmit.disabled = false;
       }
-      fastTrackIndex++;
-      renderFastTrackCard();
     });
   }
 
@@ -2630,6 +2683,22 @@ async function launchAutoFillForJob(jobId) {
       })
     });
     const d = await res.json();
+    if (res.status === 409 && d.duplicate) {
+      const proceed = window.confirm(`${d.error}\n\nClick OK to open anyway, or Cancel to skip.`);
+      if (proceed) {
+        const retryRes = await fetch('/api/jobs/autofill', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: portalUrl, cv_file: job.cv_file || 'cv/Vijay_Kumar_Senior_QA_CV.pdf', force: true })
+        });
+        const retryData = await retryRes.json();
+        showToast(retryData.success ? `⚡ Chrome window active! Pre-filling ${job.company}...` : `Launcher note: ${retryData.error}`, retryData.success);
+      } else {
+        showToast('Skipped duplicate application.', false);
+      }
+      launchBtns.forEach(b => { b.disabled = false; b.innerHTML = '<span>⚡</span> 1-Click Launch &amp; Auto-Fill'; });
+      return;
+    }
     if (d.success) {
       showToast(`⚡ Chrome window active! Pre-filling ${job.company}'s application...`, true);
       launchBtns.forEach(b => {
@@ -2652,20 +2721,75 @@ async function launchAutoFillForJob(jobId) {
   }
 }
 
+let cachedCandidateProfile = null;
+const FT_STORAGE_KEY = 'careerpilot_fast_track_state';
+
+function saveFastTrackProgress() {
+  try {
+    const currentJob = fastTrackQueue[fastTrackIndex];
+    localStorage.setItem(FT_STORAGE_KEY, JSON.stringify({
+      index: fastTrackIndex,
+      jobId: currentJob ? currentJob.id : null,
+      source: currentJob ? currentJob.source : null
+    }));
+  } catch (e) {}
+}
+
+function loadFastTrackProgress() {
+  try {
+    const raw = localStorage.getItem(FT_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function setFtAutomationBadge(stateText) {
+  const el = document.getElementById('ft-automation-state');
+  if (el) el.innerText = stateText || 'Idle';
+}
+
+function openFastTrackApprovalPanel() {
+  const job = fastTrackQueue[fastTrackIndex];
+  const panel = document.getElementById('ft-approval-panel');
+  const summary = document.getElementById('ft-approval-summary');
+  if (!job || !panel || !summary) return;
+
+  const profile = cachedCandidateProfile || {};
+  const missingFields = [];
+  if (!profile.name) missingFields.push('Full Name');
+  if (!profile.email) missingFields.push('Email');
+  if (!profile.phone) missingFields.push('Phone');
+  if (!job.cv_file) missingFields.push('Resume PDF');
+
+  summary.innerHTML = `
+    <div><strong>Employer:</strong> ${escapeHtml(job.company)}</div>
+    <div><strong>Job Title:</strong> ${escapeHtml(job.role)}</div>
+    <div><strong>Application URL:</strong> ${escapeHtml(job.source || 'Not set')}</div>
+    <div><strong>Resume Selected:</strong> ${escapeHtml(job.cv_file || 'None (Master CV fallback)')}</div>
+    <div><strong>Cover Letter Selected:</strong> ${escapeHtml(job.cover_letter_file || 'None')}</div>
+    <div><strong>Candidate Info:</strong> ${escapeHtml(profile.name || 'Incomplete')} • ${escapeHtml(profile.email || 'Missing email')} • ${escapeHtml(profile.phone || 'Missing phone')}</div>
+    <div><strong>Missing / Uncertain Fields:</strong> ${missingFields.length ? `<span style="color:#b45309;font-weight:700;">${escapeHtml(missingFields.join(', '))}</span>` : '<span style="color:#059669;font-weight:700;">None detected</span>'}</div>
+  `;
+  panel.style.display = 'block';
+}
+
 // Open the Fast-Track 50-Job Modal
 function openFastTrackModal() {
-  // Filter unapplied roles sorted by fit_rating desc
+  const INELIGIBLE = new Set(['applied', 'submitted', 'application confirmed', 'rejected', 'skipped']);
   fastTrackQueue = allJobs
-    .filter(j => (j.status || '').toLowerCase() !== 'applied' && (j.status || '').toLowerCase() !== 'rejected')
-    .sort((a, b) => parseInt(b.fit_rating || '85', 10) - parseInt(a.fit_rating || '85', 10))
+    .filter(j => !INELIGIBLE.has((j.status || '').toLowerCase().trim()))
+    .sort((a, b) => parseInt(b.fit_rating || '0', 10) - parseInt(a.fit_rating || '0', 10))
     .slice(0, 50);
 
-  if (fastTrackQueue.length === 0) {
-    showToast('All tracked positions are already marked as applied! Fantastic work.', true);
-    return;
+  const saved = loadFastTrackProgress();
+  if (saved && saved.jobId) {
+    const idx = fastTrackQueue.findIndex(j => j.id === saved.jobId && (!saved.source || j.source === saved.source));
+    fastTrackIndex = idx >= 0 ? idx : Math.min(saved.index || 0, Math.max(0, fastTrackQueue.length - 1));
+  } else {
+    fastTrackIndex = 0;
   }
 
-  fastTrackIndex = 0;
   const modal = document.getElementById('fast-track-modal');
   if (modal) {
     modal.classList.add('open');
@@ -2676,17 +2800,51 @@ function openFastTrackModal() {
 
 // Render active job in Fast-Track modal
 function renderFastTrackCard() {
-  if (fastTrackIndex < 0) fastTrackIndex = 0;
-  if (fastTrackIndex >= fastTrackQueue.length) {
-    // Finished queue!
-    const card = document.getElementById('ft-active-card');
+  const panel = document.getElementById('ft-approval-panel');
+  if (panel) panel.style.display = 'none';
+
+  const labelEl = document.getElementById('ft-progress-label');
+  const percentEl = document.getElementById('ft-progress-percent');
+  const barEl = document.getElementById('ft-progress-bar');
+  const card = document.getElementById('ft-active-card');
+
+  if (fastTrackQueue.length === 0) {
+    if (labelEl) labelEl.innerText = 'Queue: 0 of 0';
+    if (percentEl) percentEl.innerText = '0 Submitted (0%)';
+    if (barEl) barEl.style.width = '0%';
     if (card) {
       card.innerHTML = `
         <div style="text-align:center; padding:30px 10px;">
-          <div style="font-size:42px; margin-bottom:12px;">🎉</div>
-          <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:8px;">All 50 Fast-Track Applications Completed!</h3>
+          <div style="font-size:36px; margin-bottom:10px;">📭</div>
+          <h3 style="font-size:17px; font-weight:800; margin-bottom:8px;">No Eligible Jobs in Fast-Track Queue</h3>
+          <p style="font-size:13px; color:#64748b; max-width:440px; margin:0 auto;">
+            All tracked roles are already Submitted, Applied, Confirmed, Skipped, or Rejected.
+          </p>
+        </div>
+      `;
+    }
+    return;
+  }
+
+  const SUBMITTED_SET = new Set(['applied', 'submitted', 'application confirmed']);
+  const submittedCount = fastTrackQueue.filter(j => SUBMITTED_SET.has((j.status || '').toLowerCase().trim())).length;
+  const total = fastTrackQueue.length;
+  const submittedPct = Math.round((submittedCount / total) * 100);
+
+  if (fastTrackIndex < 0) fastTrackIndex = 0;
+  if (fastTrackIndex >= fastTrackQueue.length) {
+    if (labelEl) labelEl.innerText = `Queue: End of ${total} Jobs`;
+    if (percentEl) percentEl.innerText = `${submittedCount} of ${total} Submitted (${submittedPct}%)`;
+    if (barEl) barEl.style.width = `${submittedPct}%`;
+    if (card) {
+      card.innerHTML = `
+        <div style="text-align:center; padding:30px 10px;">
+          <div style="font-size:42px; margin-bottom:12px;">${submittedCount === total ? '🎉' : '📋'}</div>
+          <h3 style="font-size:18px; font-weight:800; margin-bottom:8px;">
+            ${submittedCount === total ? `All ${total} Fast-Track Applications Submitted!` : `Reached End of Queue (${submittedCount} of ${total} Submitted)`}
+          </h3>
           <p style="font-size:13px; color:#64748b; max-width:480px; margin:0 auto 16px;">
-            You have blitzed through your ready pipeline. Check the <strong>Applications</strong> tab to review your applied positions and track interview responses.
+            Skipped or unsubmitted roles remain tracked separately. Use Previous to revisit any role.
           </p>
           <button class="btn btn-primary" onclick="closeFastTrackModal()">Return to Dashboard</button>
         </div>
@@ -2697,20 +2855,12 @@ function renderFastTrackCard() {
 
   const job = fastTrackQueue[fastTrackIndex];
   activeAutofillJob = job;
-  const total = fastTrackQueue.length;
   const currentNum = fastTrackIndex + 1;
-  const percent = Math.round(((currentNum - 1) / total) * 100);
 
-  // Update progress
-  const labelEl = document.getElementById('ft-progress-label');
-  const percentEl = document.getElementById('ft-progress-percent');
-  const barEl = document.getElementById('ft-progress-bar');
   if (labelEl) labelEl.innerText = `Queue: Application ${currentNum} of ${total}`;
-  if (percentEl) percentEl.innerText = `${percent}% Completed`;
-  if (barEl) barEl.style.width = `${percent}%`;
+  if (percentEl) percentEl.innerText = `${submittedCount} Submitted (${submittedPct}%)`;
+  if (barEl) barEl.style.width = `${submittedPct}%`;
 
-  // Render card
-  const card = document.getElementById('ft-active-card');
   if (card) {
     const fit = parseInt(job.fit_rating || '85', 10);
     const fitBadge = fit >= 90 ? '#10b981' : '#3b82f6';
@@ -2721,11 +2871,17 @@ function renderFastTrackCard() {
     card.innerHTML = `
       <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; gap:12px; flex-wrap:wrap;">
         <div>
-          <span style="font-size:11px; font-weight:800; color:${fitBadge}; background:${fitBadge}15; padding:3px 8px; border-radius:12px; display:inline-block; margin-bottom:6px;">
-            ⚡ ${fit}% ATS Match
-          </span>
+          <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; margin-bottom:6px;">
+            <span style="font-size:11px; font-weight:800; color:${fitBadge}; background:${fitBadge}15; padding:3px 8px; border-radius:12px;">
+              ⚡ ${fit}% ATS Match
+            </span>
+            <span style="font-size:11px; font-weight:700; color:#475569; background:#f1f5f9; padding:3px 8px; border-radius:12px;">
+              Status: ${escapeHtml(job.status || 'Discovered')}
+            </span>
+          </div>
           <h3 style="margin:0; font-size:17px; font-weight:800; color:#0f172a;">${escapeHtml(job.company)}</h3>
           <div style="font-size:14px; font-weight:700; color:var(--primary); margin-top:2px;">${escapeHtml(job.role)}</div>
+          <div style="font-size:12px; color:#64748b; margin-top:3px;">📍 ${escapeHtml(job.role_type || 'Location not specified')}</div>
         </div>
         <div style="text-align:right;">
           <span style="font-size:11.5px; color:#64748b; font-weight:600; display:block;">Scraped: ${formatDateDisplay(job.date)}</span>
@@ -2734,7 +2890,7 @@ function renderFastTrackCard() {
       </div>
 
       <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; margin-bottom:14px; font-size:12.5px; line-height:1.5;">
-        <div style="margin-bottom:6px;"><strong>Target Portal:</strong> <a href="${escapeHtml(job.source || '#')}" target="_blank" style="color:#0284c7; font-weight:700; text-decoration:none;">${escapeHtml(job.source ? job.source.slice(0, 75) + '...' : 'Direct Portal Link')} ↗</a></div>
+        <div style="margin-bottom:6px;"><strong>Target Portal:</strong> <a href="${escapeHtml(job.source || '#')}" target="_blank" style="color:#0284c7; font-weight:700; text-decoration:none;">${escapeHtml(job.source ? job.source.slice(0, 75) : 'Direct Portal Link')} ↗</a></div>
         <div><strong>Key Requirements:</strong> <span style="color:#475569;">${escapeHtml(job.notes || 'Playwright, TypeScript, CI/CD, Manual & API Testing')}</span></div>
       </div>
 
@@ -2761,28 +2917,57 @@ function renderFastTrackCard() {
   }
 }
 
-// Populate Quick Snippets inside Fast-Track modal
-function populateFastTrackSnippets() {
+// Populate Quick Snippets inside Fast-Track modal from live /api/profile
+async function populateFastTrackSnippets() {
   const container = document.getElementById('ft-quick-snippets');
+  const warningEl = document.getElementById('ft-profile-warning');
   if (!container) return;
+
+  let profile = cachedCandidateProfile;
+  try {
+    const res = await fetch('/api/profile');
+    if (res.ok) {
+      profile = await res.json();
+      cachedCandidateProfile = profile;
+    }
+  } catch (e) {}
+
+  profile = profile || {};
+  const missing = [];
+  if (!profile.name) missing.push('Full Name');
+  if (!profile.email) missing.push('Email');
+  if (!profile.phone) missing.push('Phone');
+  if (!profile.location) missing.push('Location');
+  if (!profile.linkedin) missing.push('LinkedIn');
+  if (!profile.github) missing.push('GitHub');
+
+  if (warningEl) {
+    if (missing.length > 0) {
+      warningEl.style.display = 'block';
+      warningEl.innerText = `⚠️ Incomplete candidate profile in CLAUDE.md — missing: ${missing.join(', ')}.`;
+    } else {
+      warningEl.style.display = 'none';
+    }
+  }
+
   const snippets = [
-    { label: 'Full Legal Name', val: 'Vijay Kumar' },
-    { label: 'Primary Email', val: 'vijaychuhan007@gmail.com' },
-    { label: 'Direct Phone', val: '+91 7696122634' },
-    { label: 'Notice Period', val: '15 Days (Immediate/Short)' },
-    { label: 'Total Experience', val: '5 Years' },
-    { label: 'Current Location', val: 'India (Open to Remote / Major Tech Hubs)' },
-    { label: 'LinkedIn Profile', val: 'https://www.linkedin.com/in/vijay-007' },
-    { label: 'GitHub / Portfolio', val: 'https://github.com/vijayqadevkraft' },
-    { label: 'Work Authorization', val: 'Citizen (No Sponsorship Needed for Domestic)' }
+    { label: 'Full Legal Name', val: profile.name || '' },
+    { label: 'Primary Email', val: profile.email || '' },
+    { label: 'Direct Phone', val: profile.phone || '' },
+    { label: 'Notice Period', val: profile.noticePeriod || '' },
+    { label: 'Total Experience', val: profile.experience || (profile.experienceYears ? `${profile.experienceYears} Years` : '') },
+    { label: 'Current Location', val: profile.location || '' },
+    { label: 'LinkedIn Profile', val: profile.linkedin || '' },
+    { label: 'GitHub / Portfolio', val: profile.github || '' }
   ];
+
   container.innerHTML = snippets.map(s => `
     <div style="background:#fff; border:1px solid #e2e8f0; border-radius:6px; padding:8px 10px; display:flex; justify-content:space-between; align-items:center;">
       <div style="min-width:0; flex:1;">
-        <div style="font-size:10px; text-transform:uppercase; color:#94a3b8; font-weight:700;">${s.label}</div>
-        <div style="font-size:12px; font-weight:700; color:#1e293b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${s.val}</div>
+        <div style="font-size:10px; text-transform:uppercase; color:#94a3b8; font-weight:700;">${escapeHtml(s.label)}</div>
+        <div style="font-size:12px; font-weight:700; color:${s.val ? '#1e293b' : '#b45309'}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(s.val || 'Not set in profile')}</div>
       </div>
-      <button onclick="copyToClipboard('${s.val.replace(/'/g, "\\'")}', '${s.label}')" class="btn btn-outline btn-sm" style="padding:2px 6px; font-size:10px; margin-left:6px; cursor:pointer;" title="Copy">📋 Copy</button>
+      ${s.val ? `<button onclick="copyToClipboard('${s.val.replace(/'/g, "\\'")}', '${s.label}')" class="btn btn-outline btn-sm" style="padding:2px 6px; font-size:10px; margin-left:6px; cursor:pointer;" title="Copy">📋 Copy</button>` : ''}
     </div>
   `).join('');
 }

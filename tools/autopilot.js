@@ -67,6 +67,19 @@ const DEAL_BREAKERS = [
   "hardware engineer"
 ];
 
+export function validateScrapedJob(job) {
+  if (!job || !job.company || !job.role || !job.source) return false;
+  try {
+    const parsed = new URL(job.source);
+    if (!['http:', 'https:'].includes(parsed.protocol)) return false;
+    const host = parsed.hostname.toLowerCase();
+    if (EXCLUDED_DOMAINS.some(d => host.includes(d))) return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 // Domains explicitly excluded per user instructions (all third-party aggregators & job portals)
 const EXCLUDED_DOMAINS = [
   'jobleads.',

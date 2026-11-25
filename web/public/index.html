@@ -1513,11 +1513,15 @@
       </div>
 
       <div class="modal-body" style="flex: 1; padding: 20px; overflow-y: auto;">
-        <!-- Queue Progress Bar -->
+        <!-- Profile Completeness Warning -->
+        <div id="ft-profile-warning" style="display:none; background:#fffbeb; border:1px solid #fcd34d; color:#92400e; border-radius:8px; padding:10px 14px; margin-bottom:12px; font-size:12px; font-weight:600;"></div>
+
+        <!-- Queue Progress Bar & Live Automation State -->
         <div style="margin-bottom: 16px;">
-          <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 6px;">
-            <span id="ft-progress-label">Queue: Job 1 of 50</span>
-            <span id="ft-progress-percent">0% Completed</span>
+          <div style="display: flex; justify-content: space-between; align-items:center; font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 6px; gap:8px; flex-wrap:wrap;">
+            <span id="ft-progress-label">Queue: Application 1 of 50</span>
+            <span id="ft-automation-state" style="font-size:11px; padding:2px 10px; border-radius:999px; background:#e2e8f0; color:#334155;">Idle</span>
+            <span id="ft-progress-percent">0 Submitted (0%)</span>
           </div>
           <div style="height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden;">
             <div id="ft-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #6366f1, #3b82f6); transition: width 0.3s ease;"></div>
@@ -1527,6 +1531,16 @@
         <!-- Active Job Card -->
         <div id="ft-active-card" style="background: #ffffff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 18px; box-shadow: 0 2px 8px rgba(59,130,246,0.08); margin-bottom: 16px;">
           <!-- Dynamically populated -->
+        </div>
+
+        <!-- Human Approval Review Panel -->
+        <div id="ft-approval-panel" style="display:none; background:#f8fafc; border:2px solid #4f46e5; border-radius:10px; padding:16px; margin-bottom:16px;">
+          <div style="font-weight:800; font-size:13.5px; color:#1e3a8a; margin-bottom:8px;">🛡️ Final Review &amp; Approval Required Before Submission</div>
+          <div id="ft-approval-summary" style="font-size:12.5px; color:#334155; line-height:1.55; margin-bottom:12px;"></div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn btn-outline" id="ft-btn-review-edit" type="button">✏️ Review / Edit Application</button>
+            <button class="btn btn-primary" id="ft-btn-approve-submit" type="button" style="background:#10b981; border:none; font-weight:800;">✅ Approve &amp; Submit</button>
+          </div>
         </div>
 
         <!-- Live OTP Injection Box (if Oracle/Workday identity check is active) -->
@@ -1555,12 +1569,13 @@
         </details>
       </div>
 
-      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-light); padding: 14px 20px; background: #f8fafc;">
-        <button class="btn btn-outline" id="ft-btn-prev">⬅️ Previous Job</button>
-        <div style="display: flex; gap: 8px;">
-          <button class="btn btn-outline" id="ft-btn-skip">⏭️ Skip for Now</button>
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-light); padding: 14px 20px; background: #f8fafc; gap:8px; flex-wrap:wrap;">
+        <button class="btn btn-outline" id="ft-btn-prev">⬅️ Previous</button>
+        <div style="display: flex; gap: 8px; flex-wrap:wrap;">
+          <button class="btn btn-outline" id="ft-btn-skip">⏭️ Skip</button>
+          <button class="btn btn-outline" id="ft-btn-next">Next ➡️</button>
           <button class="btn btn-primary" id="ft-btn-mark-next" style="background: #10b981; border: none; font-weight: 800;">
-            ✅ Mark Applied &amp; Next Job ⏭️
+            🛡️ Review &amp; Approve Submission
           </button>
         </div>
       </div>
