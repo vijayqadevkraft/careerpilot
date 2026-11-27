@@ -133,3 +133,6 @@ tools/autofill/code.json
 **/.chrome_temp/
 
 
+
+.vercel
+.env*
