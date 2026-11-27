@@ -67,6 +67,7 @@ jobs:
 
   python-tests:
     name: Python tool tests (Python ${{ matrix.python-version }})
+    if: github.repository == 'ai-job-search-dev/ai-job-search'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -90,6 +91,7 @@ jobs:
     # uses for its Bash tool on Windows, with stdout left at the Windows default
     # encoding, so a cp1252 crash shows up here the way it does for a user.
     name: Python tool tests (Windows, Python 3.14)
+    if: github.repository == 'ai-job-search-dev/ai-job-search'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4

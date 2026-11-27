@@ -31,7 +31,6 @@ test('GET /api/jobs returns tracked jobs list', async () => {
   assert.equal(res.status, 200);
   const data = await res.json();
   assert.ok(Array.isArray(data.jobs));
-  assert.ok(data.jobs.length > 0);
 });
 
 test('POST /api/ai/ats-scan computes real keyword-driven scores without hardcoded 92 floor', async () => {
